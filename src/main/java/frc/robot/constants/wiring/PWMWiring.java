@@ -24,7 +24,7 @@ public enum PWMWiring {
      * @return
      */
     public int getPort (){
-        return m_port;
+        return this.m_port;
     }
 
 }
