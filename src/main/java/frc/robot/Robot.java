@@ -7,7 +7,15 @@
 
 package frc.robot;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,6 +25,23 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  private CANSparkMax left1;
+  private CANSparkMax left2;
+  private CANSparkMax left3;
+  private SpeedControllerGroup leftMotors;
+
+  private CANSparkMax right1;
+  private CANSparkMax right2;
+  private CANSparkMax right3;
+  private SpeedControllerGroup rightMotors;
+
+  private DifferentialDrive drive;
+
+  private XboxController pilot;
+
+  //private CANSparkMax s20;
+
   
   /**
    * This function is run when the robot is first started up and should be used
@@ -24,6 +49,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    left1 = new CANSparkMax(20, MotorType.kBrushless);
+    left2 = new CANSparkMax(21, MotorType.kBrushless);
+    left3 = new CANSparkMax(22, MotorType.kBrushless);
+    leftMotors = new SpeedControllerGroup(left1, left2, left3);
+    right1 = new CANSparkMax(23, MotorType.kBrushless);
+    right2 = new CANSparkMax(24, MotorType.kBrushless);
+    right3 = new CANSparkMax(25, MotorType.kBrushless);
+    rightMotors = new SpeedControllerGroup(right1, right2, right3);
+
+    drive = new DifferentialDrive(leftMotors, rightMotors);
+
+    pilot = new XboxController(0);
 
   }
 
@@ -41,7 +79,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    
+
+    drive.arcadeDrive(pilot.getY(Hand.kLeft), -pilot.getX(Hand.kRight));
+
   }
 
   @Override
