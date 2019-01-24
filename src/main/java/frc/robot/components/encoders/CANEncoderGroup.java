@@ -27,15 +27,23 @@ public class CANEncoderGroup{
         /**
          * Calculate the average
          */
+        int n = this.encoders.length;
         // Initialize a sum
         double sum = 0.0;
         // Iterate through each encoder
         for (CANEncoder e : this.encoders){
+            double pos = e.getPosition();
             // Add each position to the sum
-            sum += e.getPosition();
+            sum += pos;
+            if (pos == 0){
+                n--;
+            }
+        }
+        if (n == 0){
+            return -1;
         }
         // Compute the average
-        double average = sum / this.encoders.length;
+        double average = sum / n;
         // Return the average
         return average;
 
