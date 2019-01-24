@@ -24,24 +24,16 @@ public class Drive extends DifferentialDrive{
 
             // Initialize the spark maxes
             CANSparkMax left1 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
-            CANSparkMax left2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
-            CANSparkMax left3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
-            CANSparkMax right1 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
-            CANSparkMax right2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
-            CANSparkMax right3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax left2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_2);
+            CANSparkMax left3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_3);
+            CANSparkMax right1 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_1);
+            CANSparkMax right2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_2);
+            CANSparkMax right3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_3);
 
             instance = new Drive(left, right);
         }
         return instance;
     }
-
-    private Encoder leftEncoder;
-    private Encoder rightEncoder;
-
-    private PIDController pid;
-
-    private double leftOutput;
-    private double rightOutput;
 
     /**
      * Default constructor for just the motors and no encoders
