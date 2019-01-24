@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Victor;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.PWMWiring;
+import frc.robot.util.Logger;
 
 /**
  * Class with static methods that create and manipulate speed controllers
@@ -23,7 +24,7 @@ public class SpeedControllers{
         // Initialize the controller
         CANSparkMax controller = new CANSparkMax(port.getPort(), MotorType.kBrushless);
         // Log the creation
-        
+        Logger.log("CANSparkMax-Brushless Initialzied with CAN ID: " + controller.getDeviceId());
         // Return the controller
         return controller;
     }
@@ -36,6 +37,8 @@ public class SpeedControllers{
     public static WPI_TalonSRX getTalonSRX (CANWiring port){
         // Initialize the controller
         WPI_TalonSRX controller = new WPI_TalonSRX(port.getPort());
+        // Log the creation
+        Logger.log("WPI_TalonSRX Initialzied with CAN ID: " + controller.getDeviceID());
         // Return the controller
         return controller;
     }
@@ -48,6 +51,8 @@ public class SpeedControllers{
     public static WPI_VictorSPX getVictorSPX (CANWiring port){
         // Initialize the controller
         WPI_VictorSPX controller = new WPI_VictorSPX(port.getPort());
+        // Log the creation
+        Logger.log("WPI_VictorSPX Initialzied with CAN ID: " + controller.getDeviceID());
         // Return the controller
         return controller;
     }
@@ -60,6 +65,8 @@ public class SpeedControllers{
     public static Victor getVictor (PWMWiring port){
         // Initialize the controller
         Victor controller = new Victor(port.getPort());
+        // Log the creation
+        Logger.log("Victor Initialzied on PWM Port " + port.getPort());
         // Return the controller
         return controller;
     }
