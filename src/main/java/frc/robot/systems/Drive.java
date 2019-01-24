@@ -1,14 +1,39 @@
 
 package frc.robot.systems;
 
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.components.speed.SpeedControllers;
+import frc.robot.constants.wiring.CANWiring;
 
 public class Drive extends DifferentialDrive{
+
+    /** The sole static instance of Drive */
+    private static Drive instance;
+    /**
+     * Returns an instance of Drive, creating one if necessary
+     * @return
+     */
+    public static Drive getInstance (){
+        if (instance == null){
+
+            // Initialize the spark maxes
+            CANSparkMax left1 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax left2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax left3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax right1 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax right2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax right3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_LEFT_1);
+
+            instance = new Drive(left, right);
+        }
+        return instance;
+    }
 
     private Encoder leftEncoder;
     private Encoder rightEncoder;
@@ -60,5 +85,6 @@ public class Drive extends DifferentialDrive{
     public void driveAuto(){
         super.arcadeDrive(leftOutput, 0);
     }
+
 
 }

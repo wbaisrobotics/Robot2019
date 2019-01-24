@@ -22,6 +22,8 @@ public class SpeedControllers{
     public static CANSparkMax getSpartMaxBrushless (CANWiring port){
         // Initialize the controller
         CANSparkMax controller = new CANSparkMax(port.getPort(), MotorType.kBrushless);
+        // Log the creation
+        
         // Return the controller
         return controller;
     }
