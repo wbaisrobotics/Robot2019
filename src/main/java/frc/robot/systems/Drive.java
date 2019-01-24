@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.wiring.CANWiring;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
+import frc.robot.components.speed.CANSparkMaxGroup;
 
 public class Drive extends DifferentialDrive{
 
@@ -30,53 +33,67 @@ public class Drive extends DifferentialDrive{
             CANSparkMax right2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_2);
             CANSparkMax right3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_3);
 
-            instance = new Drive(left, right);
+            instance = new Drive(new CANSparkMaxGroup (left1, left2, left3), new CANSparkMaxGroup (right1, right2, right3));
+
         }
         return instance;
     }
+
+    private CANSparkMaxGroup left;
+    private CANSparkMaxGroup right;
+
+    private ADXRS450_Gyro gyro;
 
     /**
      * Default constructor for just the motors and no encoders
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (SpeedController left, SpeedController right){
+    public Drive (CANSparkMaxGroup left, CANSparkMaxGroup right){
+        // Call DifferentialDrive with the controllers
         super (left, right);
+        // Save the groups
+        this.left = left;
+        this.right = right;
     }
 
-        /**
-     * Default constructor for the motors and encoders
-     * @param left - the left motors
-     * @param right - the right motors
+    /**
+     * Resets all sensors
      */
-    public Drive (SpeedController left, SpeedController right, Encoder leftEncoder, Encoder rightEncoder){
-        super (left, right);
-        this.leftEncoder = leftEncoder;
-        this.rightEncoder = rightEncoder;
-        pid = new PIDController(0, 0, 0, 0, this.leftEncoder, e -> leftOutput = e);
-        pid.enable();
-        SmartDashboard.putNumber ("P", 0);
-        SmartDashboard.putNumber ("I", 0);
-        SmartDashboard.putNumber("D", 0);
-        SmartDashboard.putNumber("FF", 0);
-        SmartDashboard.putNumber("Setpoint", 0);
-    }
-
     public void reset (){
-        this.leftEncoder.reset();
-        this.rightEncoder.reset();
-        this.pid.reset();
-        this.pid.enable();
+        // Reset the gyro
+        gyro.reset();
+        // TBA for encoders once spark max update comes out
     }
 
     public void updatePID(){
-        pid.setPID(SmartDashboard.getNumber("P", 0), SmartDashboard.getNumber("I", 0), SmartDashboard.getNumber("D", 0), SmartDashboard.getNumber("FF", 0));
-        pid.setSetpoint(SmartDashboard.getNumber("Setpoint", 0));
+        // Update the PID Values to what is in the dashboard
+        left.getPIDControllerGroup().setP(SmartDashboard.getNumber("P", 0));
+        left.getPIDControllerGroup().setI(SmartDashboard.getNumber("I", 0));
+        left.getPIDControllerGroup().setD(SmartDashboard.getNumber("D", 0));
+        right.getPIDControllerGroup().setP(SmartDashboard.getNumber("P", 0));
+        right.getPIDControllerGroup().setI(SmartDashboard.getNumber("I", 0));
+        right.getPIDControllerGroup().setD(SmartDashboard.getNumber("D", 0));
     }
 
-    public void driveAuto(){
-        super.arcadeDrive(leftOutput, 0);
+    /**
+     * Updates the PID Setpoint and starts the onboard pid controller
+     * @param left
+     * @param right
+     */
+    public void setPIDSetpoint(double leftSetpoint, double rightSetpoint){
+        // Set the setpoint for left
+        left.getPIDControllerGroup().setReference(leftSetpoint);
+        // Set the setpoint for right
+        right.getPIDControllerGroup().setReference(rightSetpoint);
     }
 
+    /**
+     * Immediately halts both sides
+     */
+    public void stop (){
+        left.stopMotor();
+        right.stopMotor();
+    }
 
 }
