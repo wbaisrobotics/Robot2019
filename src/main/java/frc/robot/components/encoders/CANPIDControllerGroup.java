@@ -25,6 +25,7 @@ public class CANPIDControllerGroup{
         for (int i = 0; i < controllers.length; i++){
             // Get the encoder for this controller
             this.pidControllers[i] = controllers[i].getPIDController();
+            this.pidControllers[i].setOutputRange(-1, 1);
         }
     }
 
