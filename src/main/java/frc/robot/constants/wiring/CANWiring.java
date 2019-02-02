@@ -12,6 +12,11 @@ public enum CANWiring {
     DRIVE_RIGHT_1 (23),
     DRIVE_RIGHT_2 (24),
     DRIVE_RIGHT_3 (25),
+
+    FRONT_CLIMBER_LEFT (1),
+    FRONT_CLIMBER_RIGHT (2),
+    BACK_CLIMBER_LEFT (3),
+    BACK_CLIMBER_RIGHT (4),
     ;
 
     /** The stored port */

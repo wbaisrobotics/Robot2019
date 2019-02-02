@@ -7,18 +7,16 @@ package frc.robot.constants.wiring;
 public enum DIOWiring {
 
     // The different sensors/outputs and their cooresponding port(s)
-    ELEVATOR_ENCODER_A(3),
-    ELEVATOR_ENCODER_B(4),
-    FORK_RETRACTED_SW(1),
-    DRIVE_LEFT_B(5),
-    DRIVE_LEFT_A(6),
-    DRIVE_RIGHT_A(8),
-    DRIVE_RIGHT_B(7),
-    INTAKE_SW(9), 
-    TEAMMATE_LIFTER_LEFT_SW(2),
-    TEAMMATE_LIFTER_RIGHT_SW(20),
-    ELEVATOR_BOTTOM_SW(18),
-    FORK_EXTENDED_SW(0);
+    FRONT_CLIMBER_LEFT_RETRACTED (0),
+    FRONT_CLIMBER_LEFT_EXTENDED (1),
+    FRONT_CLIMBER_RIGHT_RETRACTED (2),
+    FRONT_CLIMBER_RIGHT_EXTENDED (3),
+    BACK_CLIMBER_LEFT_RETRACTED (4),
+    BACK_CLIMBER_LEFT_EXTENDED (5),
+    BACK_CLIMBER_RIGHT_RETRACTED (6),
+    BACK_CLIMBER_RIGHT_EXTENDED (7),
+
+    ;
 
     /** The stored port **/
     private int m_port;

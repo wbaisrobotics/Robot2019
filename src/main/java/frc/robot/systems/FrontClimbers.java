@@ -1,8 +1,14 @@
 package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.components.LimitSwitch;
+import frc.robot.components.LimitSwitch.SwitchConfiguration;
+import frc.robot.components.LimitSwitch.WiringConfiguration;
+import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
+import frc.robot.constants.wiring.CANWiring;
+import frc.robot.constants.wiring.DIOWiring;
 
 /**
  * The climbers in the front of the robot used to create an angle for climbing lvl 2/3
@@ -13,7 +19,45 @@ import frc.robot.components.speed.SwitchRangedController;
  * Note: (RAW) Positive power on right motor should represent retracting
  * 
  */
-public class FrontClimbers{
+public class FrontClimbers extends Subsystem{
+
+    /**
+     * The instance of the system
+     */
+    private FrontClimbers instance;
+
+    /**
+     * Returns (and possibly creates) the system instance
+     * @return
+     */
+    public FrontClimbers getInstance (){
+        // If not initialized yet,
+        if (instance == null){
+            // then initialize:
+
+            //// Initialize the left side
+            // Initialize the left motor 
+            SpeedController leftMotor = SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_LEFT);
+            // Initialize the left retracted switch
+            LimitSwitch leftRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            // Initialize the left extended switch
+            LimitSwitch leftExtendedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_EXTENDED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+
+            //// Initialize the right side
+            // Initialize the right motor 
+            SpeedController rightMotor = SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_RIGHT);
+            // Initialize the right retracted switch
+            LimitSwitch rightRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            // Initialize the right extended switch
+            LimitSwitch rightExtendedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_EXTENDED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+
+            // Initialize the object
+            instance = new FrontClimbers(leftMotor, leftRetractedSwitch, leftExtendedSwitch, rightMotor, rightRetractedSwitch, rightExtendedSwitch);
+
+        }
+        // Return the instance
+        return instance;
+    }
 
     /**
      * The power granted during extension
@@ -94,6 +138,12 @@ public class FrontClimbers{
      */
     public boolean isFullyRetracted(){
         return this.leftMotor.reverseSwitchActivated() && this.rightMotor.reverseSwitchActivated();
+    }
+
+    /**
+     * Sets the default command to none
+     */
+    public void initDefaultCommand(){
     }
 
 

@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.constants.wiring.DIOWiring;
 
 /** Class that manages limit switches, accounting for configurations */
 public class LimitSwitch extends DigitalInput{
@@ -19,10 +20,10 @@ public class LimitSwitch extends DigitalInput{
      * @param sConfig - configuration for switch wiring
      * @param wConfig - configuration for DIO wiring
      */
-    public LimitSwitch(int port, SwitchConfiguration sConfig, WiringConfiguration wConfig){
+    public LimitSwitch(DIOWiring port, SwitchConfiguration sConfig, WiringConfiguration wConfig){
 
         // Initializes the digital input
-        super (port);
+        super (port.getPort());
 
         // Saves the config preferences
         this.sConfig = sConfig;
