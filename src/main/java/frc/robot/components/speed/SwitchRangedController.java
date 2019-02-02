@@ -25,25 +25,50 @@ public class SwitchRangedController implements SpeedController{
     private LimitSwitch reverseSwitch;
 
     /**
-     * Sets the speed of the controller (halting if attempting to move in the direction that is pressed)
+     * Initialize with a controller, forward switch, and reverse switch
+     * @param controller
+     * @param forwardSwitch
+     * @param reverseSwitch
      */
-    public void set (double value){
+    public SwitchRangedController (SpeedController controller, LimitSwitch forwardSwitch, LimitSwitch reverseSwitch){
+        // Save the controller
+        this.controller = controller;
+        // Save the forward switch
+        this.forwardSwitch = forwardSwitch;
+        // Save the reverse switch
+        this.reverseSwitch = reverseSwitch;
+    }
+
+    /**
+     * Sets the speed of the controller (halting if attempting to move in the direction that is pressed)
+     * @return - true if finished
+     */
+    public boolean setControlled (double value){
         // If attempting to move in the + direction, and + switch is not pressed
         if (value > 0 && (!fowardSwitchActivated())){
             // then authorize the movement (send the value to the controller)
-            this.controller.set(value);
-            // return from the method
-            return;
+            set(value);
+            // return from the method with a moving message
+            return false;
         }
         // Else if attempting to move in the - direction, and - switch is not pressed
         else if (value < 0 && (!reverseSwitchActivated())){
             // then authorize the movement (send the value to the controller)
-            this.controller.set(value);
-            // return from the method
-            return;
+            set(value);
+            // return from the method with a moving message
+            return false;
         }
         // If not returned so far (indicating problem with movement or 0 value), then halt
         this.controller.stopMotor();
+        // and return an end message
+        return true;
+    }
+
+    /**
+     * Set raw speed controller value
+     */
+    public void set (double value){
+        this.controller.set(value);
     }
 
     /**
@@ -75,7 +100,7 @@ public class SwitchRangedController implements SpeedController{
      * Essentially calls set(value) - implemented from SpeedController interface
      */
     public void pidWrite (double value){
-        set (value);
+        setControlled (value);
     }
 
     /**
