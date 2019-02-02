@@ -16,6 +16,8 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.Trajectory;
 //import jaci.pathfinder.followers.EncoderFollower;
+
+import com.revrobotics.ControlType;
 import frc.robot.components.encoders.EncoderFollower;
 
 import frc.robot.components.speed.CANSparkMaxGroup;
@@ -55,7 +57,7 @@ public class Drive extends DifferentialDrive{
             CANSparkMax right2 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_2);
             CANSparkMax right3 = SpeedControllers.getSpartMaxBrushless(CANWiring.DRIVE_RIGHT_3);
 
-            SmartDashboard.putNumber("P", 1.0);
+            SmartDashboard.putNumber("P", 0);
             SmartDashboard.putNumber("I", 0);
             SmartDashboard.putNumber("D", 0);
 
@@ -98,13 +100,18 @@ public class Drive extends DifferentialDrive{
     }
 
     public void updatePID(){
+
+        double p = SmartDashboard.getNumber("P", 0);
+        double i = SmartDashboard.getNumber("I", 0);
+        double d = SmartDashboard.getNumber("D", 0);
+        System.out.println(p +":"+ i +":"+d);
         // Update the PID Values to what is in the dashboard
-        left.getPIDControllerGroup().setP(SmartDashboard.getNumber("P", 0));
-        left.getPIDControllerGroup().setI(SmartDashboard.getNumber("I", 0));
-        left.getPIDControllerGroup().setD(SmartDashboard.getNumber("D", 0));
-        right.getPIDControllerGroup().setP(SmartDashboard.getNumber("P", 0));
-        right.getPIDControllerGroup().setI(SmartDashboard.getNumber("I", 0));
-        right.getPIDControllerGroup().setD(SmartDashboard.getNumber("D", 0));
+        left.getPIDController().setP(p);
+        left.getPIDController().setI(i);
+        left.getPIDController().setD(d);
+        right.getPIDController().setP(p);
+        right.getPIDController().setI(i);
+        right.getPIDController().setD(d);
     }
 
     /**
@@ -114,9 +121,9 @@ public class Drive extends DifferentialDrive{
      */
     public void setPIDSetpoint(double leftSetpoint, double rightSetpoint){
         // Set the setpoint for left
-        left.getPIDControllerGroup().setReference(leftSetpoint);
+        left.getPIDController().setReference(leftSetpoint, ControlType.kPosition);
         // Set the setpoint for right
-        right.getPIDControllerGroup().setReference(rightSetpoint);
+        right.getPIDController().setReference(rightSetpoint, ControlType.kPosition);
     }
 
     /**
@@ -145,11 +152,11 @@ public class Drive extends DifferentialDrive{
         m_left_follower = new EncoderFollower(left_trajectory);
         m_right_follower = new EncoderFollower(right_trajectory);
 
-        m_left_follower.configureEncoder((int)left.getEncoderControllerGroup().getPosition(), -113, 0.15);
+        m_left_follower.configureEncoder((int)left.getEncoderPosition(), -113, 0.15);
         // You must tune the PID values on the following line!
         //m_left_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
-        m_right_follower.configureEncoder((int)right.getEncoderControllerGroup().getPosition(), 113, 0.15);
+        m_right_follower.configureEncoder((int)right.getEncoderPosition(), 113, 0.15);
         // You must tune the PID values on the following line!
         //m_right_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
@@ -167,16 +174,16 @@ public class Drive extends DifferentialDrive{
 
             updatePID();
 
-          double left_speed = m_left_follower.calculate((int)left.getEncoderControllerGroup().getPosition());
-          double right_speed = m_right_follower.calculate((int)right.getEncoderControllerGroup().getPosition());
+          double left_speed = m_left_follower.calculate((int)left.getEncoderPosition());
+          double right_speed = m_right_follower.calculate((int)right.getEncoderPosition());
           double heading = gyro.getAngle();
           double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
           double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
           double turn =  SmartDashboard.getNumber("Turn Const", 0.8) * (-1.0/80.0) * heading_difference;
           //left.set((left_speed + turn));
           //right.set(-(right_speed - turn));
-          left.getPIDControllerGroup().setReference(left_speed);
-          right.getPIDControllerGroup().setReference(right_speed);
+          left.getPIDController().setReference(left_speed, ControlType.kPosition);
+          right.getPIDController().setReference(right_speed, ControlType.kPosition);
 
           SmartDashboard.putNumber ("Left Speed", left_speed + turn);
           SmartDashboard.putNumber ("Right Speed", -(right_speed - turn));
