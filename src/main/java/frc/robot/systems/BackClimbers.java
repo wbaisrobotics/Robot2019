@@ -1,6 +1,7 @@
 package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.components.LimitSwitch;
 import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
@@ -18,18 +19,18 @@ import frc.robot.constants.wiring.DIOWiring;
  * Note: (RAW) Positive power on right motor should represent retracting
  * 
  */
-public class BackClimbers{
+public class BackClimbers extends Subsystem{
 
     /**
      * The instance of the system
      */
-    private BackClimbers instance;
+    private static BackClimbers instance;
 
     /**
      * Returns (and possibly creates) the system instance
      * @return
      */
-    public BackClimbers getInstance (){
+    public static BackClimbers getInstance (){
         // If not initialized yet,
         if (instance == null){
             // then initialize:
@@ -137,6 +138,22 @@ public class BackClimbers{
      */
     public boolean isFullyRetracted(){
         return this.leftMotor.reverseSwitchActivated() && this.rightMotor.reverseSwitchActivated();
+    }
+
+    /**
+     * Stops the motors
+     */
+    public void stop(){
+        // Stop the left motor
+        this.leftMotor.stopMotor();
+        // Stop the right motor
+        this.rightMotor.stopMotor();
+    }
+
+    /**
+     * Sets the default command to none
+     */
+    public void initDefaultCommand(){
     }
 
 

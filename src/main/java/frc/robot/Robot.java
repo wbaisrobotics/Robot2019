@@ -7,24 +7,13 @@
 
 package frc.robot;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.components.encoders.CANEncoderGroup;
 import frc.robot.systems.Drive;
-
-import edu.wpi.first.wpilibj.Notifier;
-
-import com.revrobotics.ControlType;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -54,12 +43,12 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    masterLeft = new CANSparkMax (20, MotorType.kBrushless);
-    System.out.println(masterLeft.getFirmwareString());
-    secondLeft = new CANSparkMax (21, MotorType.kBrushless);
-    secondLeft.follow(masterLeft);
+    // masterLeft = new CANSparkMax (20, MotorType.kBrushless);
+    // System.out.println(masterLeft.getFirmwareString());
+    // secondLeft = new CANSparkMax (21, MotorType.kBrushless);
+    // secondLeft.follow(masterLeft);
 
-    // this.drive = Drive.getInstance();
+    this.drive = Drive.getInstance();
 
     pilot = new XboxController(0);
 

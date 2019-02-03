@@ -24,13 +24,13 @@ public class FrontClimbers extends Subsystem{
     /**
      * The instance of the system
      */
-    private FrontClimbers instance;
+    private static FrontClimbers instance;
 
     /**
      * Returns (and possibly creates) the system instance
      * @return
      */
-    public FrontClimbers getInstance (){
+    public static FrontClimbers getInstance (){
         // If not initialized yet,
         if (instance == null){
             // then initialize:
@@ -138,6 +138,16 @@ public class FrontClimbers extends Subsystem{
      */
     public boolean isFullyRetracted(){
         return this.leftMotor.reverseSwitchActivated() && this.rightMotor.reverseSwitchActivated();
+    }
+
+    /**
+     * Stops the motors
+     */
+    public void stop(){
+        // Stop the left motor
+        this.leftMotor.stopMotor();
+        // Stop the right motor
+        this.rightMotor.stopMotor();
     }
 
     /**
