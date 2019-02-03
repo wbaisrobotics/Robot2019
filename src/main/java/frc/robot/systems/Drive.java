@@ -3,9 +3,6 @@ package frc.robot.systems;
 
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.speed.SpeedControllers;
@@ -15,7 +12,6 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.Trajectory;
-//import jaci.pathfinder.followers.EncoderFollower;
 
 import com.revrobotics.ControlType;
 import frc.robot.components.encoders.EncoderFollower;

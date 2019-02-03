@@ -23,20 +23,6 @@ import frc.robot.util.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-
-  /**
-   * The drive system of the robot 
-   */
-  private Drive drive;
-
-  /**
-   * The system in control of the two front climbing legs
-   */
-  private FrontClimbers frontClimbers;
-  /**
-   * The system in control of the two back climbing legs
-   */
-  private BackClimbers backClimbers;
   
   /**
    * This function is run when the robot is first started up and should be used
@@ -46,19 +32,19 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     /**
-     * Initializes and stores the drive instance
+     * Initializes the drive instance
      */
-    this.drive = Drive.getInstance();
+    Drive.getInstance();
 
     /**
-     * Initializes and stores the front climbers instance
+     * Initializes the front climbers instance
      */
-    this.frontClimbers = FrontClimbers.getInstance();
+    FrontClimbers.getInstance();
 
     /**
-     * Initializes and stores the back climbers instance
+     * Initializes the back climbers instance
      */
-    this.backClimbers = BackClimbers.getInstance();
+    BackClimbers.getInstance();
 
     /**
      * Initializes the OI
