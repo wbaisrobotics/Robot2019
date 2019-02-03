@@ -42,11 +42,6 @@ public class OI {
 	/** The XboxController representing the pilot **/
 	private static Map <Integer, XboxController> controllers = new HashMap <Integer, XboxController>();
 
-	
-	/**
-	 * Returns the pilot controller
-	 * @return
-	 */
 	public static XboxController getController (Controllers controller) {
 		if (!controllers.containsKey(controller.getPort())) {
 			controllers.put(controller.getPort(), new XboxController (controller.getPort()));
@@ -83,7 +78,15 @@ public class OI {
 	private static Button getButton (Button... buttons) {
 		return new ButtonCollection (buttons);
 	}
+
+	public static XboxController getPilot(){
+		return getController(Controllers.PILOT);
+	}
 	
+	public static XboxController getCoPilot(){
+		return getController(Controllers.COPILOT);
+	}
+
 	/**
 	 * Initializes all the commands controlled by buttons and assigns the buttons to them
 	 */
