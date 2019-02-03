@@ -7,15 +7,36 @@ import frc.robot.oi.POVDirection;
 public class OIConstants {
 
 	// /* Pilot */
+
+	/**
+	 * When pressed, allows for NORTH/SOUTH to control the front climbers 
+	 */
+	public static final POVDirection FRONT_CLIMBERS_A = POVDirection.WEST;
+
+	/**
+	 * When pressed, allows for NORTH/SOUTH to control the back climbers 
+	 */
+	public static final POVDirection BACK_CLIMBERS_A = POVDirection.EAST;
+
+	/**
+	 * When pressed, retracts the climbers elected using FRONT_CLIMBERS_A or BACK_CLIMBERS_A
+	 */
+	public static final POVDirection RETRACT_CLIMBERS_B = POVDirection.NORTH;
+
+	/**
+	 * When pressed, extends the climbers elected using FRONT_CLIMBERS_A or BACK_CLIMBERS_A
+	 */
+	public static final POVDirection EXTEND_CLIMBERS_B = POVDirection.SOUTH;
 	
-	// public static final ButtonConfiguration TOGGLE_GEAR_SPEED = ButtonConfiguration.kBumperLeft;
-	// public static final ButtonConfiguration TOGGLE_INTAKE_IN = ButtonConfiguration.kA;
-	// public static final ButtonConfiguration TOGGLE_INTAKE_REVERSE = ButtonConfiguration.kX;
-	// public static final ButtonConfiguration TOGGLE_RETRACT_INTAKE = ButtonConfiguration.kBumperRight;
-	// public static final POVDirection TOGGLE_INVERSE = POVDirection.SOUTH;
-	
-	// public static final AxisConfiguration DRIVE_TURN = AxisConfiguration.RIGHT_X;
-	// public static final AxisConfiguration DRIVE_MAGNITUDE = AxisConfiguration.LEFT_Y;
+	/**
+	 * The control for turning the drive system
+	 */
+	public static final AxisConfiguration DRIVE_TURN = AxisConfiguration.RIGHT_X;
+
+	/**
+	 * The control for the drive system magnitude
+	 */
+	public static final AxisConfiguration DRIVE_MAGNITUDE = AxisConfiguration.LEFT_Y;
 	
 	// /* Copilot */
 	

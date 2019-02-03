@@ -7,6 +7,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.climbing.ExtendBackClimbers;
+import frc.robot.commands.climbing.ExtendFrontClimbers;
+import frc.robot.commands.climbing.RetractBackClimbers;
+import frc.robot.commands.climbing.RetractFrontClimbers;
+import frc.robot.constants.OIConstants;
 import frc.robot.util.Cantor;
 
 /**
@@ -79,56 +84,33 @@ public class OI {
 		return new ButtonCollection (buttons);
 	}
 	
+	/**
+	 * Initializes all the commands controlled by buttons and assigns the buttons to them
+	 */
 	public static void initButtons () {
-		
-		// Command toggleGearSpeed = new ToggleGearSpeed(drive);
-		// Command invertDrive = new InvertDrive(drive);
-		// Command startIntake = new StartIntake (intake);
-		// Command reverseIntake = new ReverseIntake (intake);
-		// Command toggleRetractIntake = new ToggleRetractIntake(intake);
-		
-		// getButton (Controllers.PILOT, OIConstants.TOGGLE_GEAR_SPEED).whenPressed(toggleGearSpeed);
-		// getButton (Controllers.PILOT, OIConstants.TOGGLE_INVERSE).whenPressed(invertDrive);
-		// getButton (Controllers.PILOT, OIConstants.TOGGLE_INTAKE_IN).toggleWhenPressed(startIntake);
-		// getButton (Controllers.PILOT, OIConstants.TOGGLE_INTAKE_REVERSE).toggleWhenPressed(reverseIntake);
-		// getButton (Controllers.PILOT, OIConstants.TOGGLE_RETRACT_INTAKE).whenPressed(toggleRetractIntake);
-		
-		// SmartDashboard.putData(toggleGearSpeed);
-		// SmartDashboard.putData(toggleGearSpeed);
-		// SmartDashboard.putData(startIntake);
-		// SmartDashboard.putData(reverseIntake);
-		// SmartDashboard.putData(toggleRetractIntake);
-		
-		
-		// Command extendFork = new ExtendFork (fork);
-		// Command retractFork = new RetractFork (fork);
-		// Command toggleGripCube = new ToggleGripCube (fork);
-		// Command releaseFork = new ReleaseFork(fork);
-		// Command lowerRamp = new LowerRamp(ramp);
-		// Command liftRamp = new LiftRamp(ramp);
-		
-		// Command revertLowerRamp = new ReverseLowerRamp(ramp);
-		// Command revertLiftRamp = new ReverseLiftRamp(ramp);
-		
-		// getButton (Controllers.COPILOT, OIConstants.EXTEND_FORK).whileHeld(extendFork);
-		// getButton (Controllers.COPILOT, OIConstants.RETRACT_FORK).whileHeld(retractFork);
-		// getButton (Controllers.COPILOT, OIConstants.TOGGLE_GRIPPER).whenPressed(toggleGripCube);
-		// getButton (getButton (Controllers.COPILOT, OIConstants.RELEASE_FORK_A), getButton (Controllers.COPILOT, OIConstants.RELEASE_FORK_B)).whenPressed(releaseFork);
-		// getButton (Controllers.COPILOT, OIConstants.LOWER_RAMP, 0.5, 1).whileHeld(lowerRamp);
-		// getButton (Controllers.COPILOT, OIConstants.LIFT_RAMP, 0.5, 1).whileHeld(liftRamp);
-		
-		// SmartDashboard.putData(extendFork);
-		// SmartDashboard.putData(retractFork);
-		// SmartDashboard.putData(toggleGripCube);
-		// SmartDashboard.putData(releaseFork);
-		// SmartDashboard.putData(lowerRamp);
-		// SmartDashboard.putData(liftRamp);
-		// SmartDashboard.putData(extendFork);
-		
-		// SmartDashboard.putData(revertLowerRamp);
-		// SmartDashboard.putData(revertLiftRamp);
+
+		/* --- Pilot --- */
+
+		// Initialize the command for extending the back climbers
+		Command extendBackClimbers = new ExtendBackClimbers();
+		getButton (getButton (Controllers.PILOT, OIConstants.BACK_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.EXTEND_CLIMBERS_B)).whileHeld(extendBackClimbers);
+		SmartDashboard.putData (extendBackClimbers);
+
+		// Initialize the command for retracting the back climbers
+		Command retractBackClimbers = new RetractBackClimbers();
+		getButton (getButton (Controllers.PILOT, OIConstants.BACK_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.RETRACT_CLIMBERS_B)).whileHeld(retractBackClimbers);
+		SmartDashboard.putData (retractBackClimbers);
+
+		// Initialize the command for extending the front climbers
+		Command extendFrontClimbers = new ExtendFrontClimbers();
+		getButton (getButton (Controllers.PILOT, OIConstants.FRONT_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.EXTEND_CLIMBERS_B)).whileHeld(extendFrontClimbers);
+		SmartDashboard.putData (extendFrontClimbers);
+
+		// Initialize the command for retracting the front climbers
+		Command retractFrontClimbers = new RetractFrontClimbers();
+		getButton (getButton (Controllers.PILOT, OIConstants.FRONT_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.RETRACT_CLIMBERS_B)).whileHeld(retractFrontClimbers);
+		SmartDashboard.putData (retractFrontClimbers);
 	
-		
 	}
 
 }
