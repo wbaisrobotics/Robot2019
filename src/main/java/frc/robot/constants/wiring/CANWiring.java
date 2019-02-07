@@ -17,6 +17,8 @@ public enum CANWiring {
     FRONT_CLIMBER_RIGHT (2),
     BACK_CLIMBER_LEFT (3),
     BACK_CLIMBER_RIGHT (4),
+
+    DEATH_CRAWLER (27),
     ;
 
     /** The stored port */
