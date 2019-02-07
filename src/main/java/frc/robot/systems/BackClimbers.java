@@ -96,7 +96,7 @@ public class BackClimbers extends Subsystem{
         // Initialize the left motor ranged controller with
         // the left extended switch representing the switch that halts motion in the + [Raw] (extending) direction when activated
         // and the left retracted switch representing the switch that halts motion in the - [Raw] (retracting) direction when activated
-        leftMotor = new SwitchRangedController(leftMotor, leftExtendedSwitch, leftRetractedSwitch);
+        this.leftMotor = new SwitchRangedController(leftMotor, leftExtendedSwitch, leftRetractedSwitch);
 
         // Invert the right motor (due to symmetry)
         rightMotor.setInverted(true);
@@ -104,7 +104,7 @@ public class BackClimbers extends Subsystem{
         // Initialize the right motor ranged controller with
         // the right extended switch representing the switch that halts motion in the + [Set] (extending) direction when activated
         // and the right retracted switch representing the switch that halts motion in the - [Set] (retracting) direction when activated
-        rightMotor = new SwitchRangedController(rightMotor, rightExtendedSwitch, rightRetractedSwitch);
+        this.rightMotor = new SwitchRangedController(rightMotor, rightExtendedSwitch, rightRetractedSwitch);
 
     }
 
@@ -113,7 +113,9 @@ public class BackClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean extend (){
-        return this.leftMotor.setControlled(EXTEND_POWER) && this.rightMotor.setControlled(EXTEND_POWER);
+        boolean leftDone = this.leftMotor.setControlled(EXTEND_POWER);
+        boolean rightDone = this.rightMotor.setControlled(EXTEND_POWER);
+        return  leftDone && rightDone;
     }
 
     /**
@@ -121,7 +123,9 @@ public class BackClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean retract (){
-        return this.leftMotor.setControlled(RETRACT_POWER) && this.rightMotor.setControlled(RETRACT_POWER);
+        boolean leftDone = this.leftMotor.setControlled(RETRACT_POWER);
+        boolean rightDone = this.rightMotor.setControlled(RETRACT_POWER);
+        return  leftDone && rightDone;
     }
 
     /**

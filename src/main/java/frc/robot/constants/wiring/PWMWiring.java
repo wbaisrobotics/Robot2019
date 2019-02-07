@@ -6,7 +6,10 @@ package frc.robot.constants.wiring;
 public enum PWMWiring {
 
     // Represents the different PWM devices and their cooresponding IDs
-    ;
+    VIC_0 (0),
+    VIC_1 (1),
+    VIC_2 (2),
+    VIC_3 (3);
 
     /** The stored port */
     private int m_port;

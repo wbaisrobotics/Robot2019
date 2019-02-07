@@ -2,6 +2,7 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.LimitSwitch;
 import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
@@ -9,6 +10,7 @@ import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
+import frc.robot.constants.wiring.PWMWiring;
 
 /**
  * The climbers in the front of the robot used to create an angle for climbing lvl 2/3
@@ -37,19 +39,23 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the left side
             // Initialize the left motor 
-            SpeedController leftMotor = SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_LEFT);
+            SpeedController leftMotor = SpeedControllers.getVictor(PWMWiring.VIC_0);//SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_LEFT);
             // Initialize the left retracted switch
             LimitSwitch leftRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            SmartDashboard.putData(leftRetractedSwitch);
             // Initialize the left extended switch
             LimitSwitch leftExtendedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_EXTENDED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            SmartDashboard.putData(leftExtendedSwitch);
 
             //// Initialize the right side
             // Initialize the right motor 
-            SpeedController rightMotor = SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_RIGHT);
+            SpeedController rightMotor = SpeedControllers.getVictor(PWMWiring.VIC_1);//SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_RIGHT);
             // Initialize the right retracted switch
             LimitSwitch rightRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            SmartDashboard.putData(rightRetractedSwitch);
             // Initialize the right extended switch
             LimitSwitch rightExtendedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_EXTENDED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
+            SmartDashboard.putData(rightExtendedSwitch);
 
             // Initialize the object
             instance = new FrontClimbers(leftMotor, leftRetractedSwitch, leftExtendedSwitch, rightMotor, rightRetractedSwitch, rightExtendedSwitch);
@@ -96,15 +102,15 @@ public class FrontClimbers extends Subsystem{
         // Initialize the left motor ranged controller with
         // the left extended switch representing the switch that halts motion in the + [Raw] (extending) direction when activated
         // and the left retracted switch representing the switch that halts motion in the - [Raw] (retracting) direction when activated
-        leftMotor = new SwitchRangedController(leftMotor, leftExtendedSwitch, leftRetractedSwitch);
+        this.leftMotor = new SwitchRangedController(leftMotor, leftExtendedSwitch, leftRetractedSwitch);
 
         // Invert the right motor (due to symmetry)
-        rightMotor.setInverted(true);
+        rightMotor.setInverted(false);
 
         // Initialize the right motor ranged controller with
         // the right extended switch representing the switch that halts motion in the + [Set] (extending) direction when activated
         // and the right retracted switch representing the switch that halts motion in the - [Set] (retracting) direction when activated
-        rightMotor = new SwitchRangedController(rightMotor, rightExtendedSwitch, rightRetractedSwitch);
+        this.rightMotor = new SwitchRangedController(rightMotor, rightExtendedSwitch, rightRetractedSwitch);
 
     }
 
@@ -113,7 +119,9 @@ public class FrontClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean extend (){
-        return this.leftMotor.setControlled(EXTEND_POWER) && this.rightMotor.setControlled(EXTEND_POWER);
+        boolean leftDone = this.leftMotor.setControlled(EXTEND_POWER);
+        boolean rightDone = this.rightMotor.setControlled(EXTEND_POWER);
+        return  leftDone && rightDone;
     }
 
     /**
@@ -121,7 +129,9 @@ public class FrontClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean retract (){
-        return this.leftMotor.setControlled(RETRACT_POWER) && this.rightMotor.setControlled(RETRACT_POWER);
+        boolean leftDone = this.leftMotor.setControlled(RETRACT_POWER);
+        boolean rightDone = this.rightMotor.setControlled(RETRACT_POWER);
+        return  leftDone && rightDone;
     }
 
     /**
