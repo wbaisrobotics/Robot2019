@@ -31,7 +31,7 @@ public class DeathCrawler{
             SpeedController armMotor = SpeedControllers.getVictor(PWMWiring.DEATH_CRAWLER_ARM);
 
             // Initialize the death crawler motor
-            CANSparkMax deathCrawlMotor = SpeedControllers.getSpartMaxBrushless(CANWiring.DEATH_CRAWLER);
+            CANSparkMax deathCrawlMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.DEATH_CRAWLER);
             
             instance = new DeathCrawler(deathCrawlMotor, armMotor);
 

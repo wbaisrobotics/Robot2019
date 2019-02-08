@@ -20,7 +20,7 @@ public class SpeedControllers{
      * @param port - a port not used so far (or else HAL Allocation Error thrown)
      * @return
      */
-    public static CANSparkMax getSpartMaxBrushless (CANWiring port){
+    public static CANSparkMax getSparkMaxBrushless (CANWiring port){
         // Initialize the controller
         CANSparkMax controller = new CANSparkMax(port.getPort(), MotorType.kBrushless);
         // Log the creation

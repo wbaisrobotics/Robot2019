@@ -3,6 +3,7 @@ package frc.robot.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -66,26 +67,15 @@ public class Drive extends DifferentialDrive{
             WPI_TalonSRX left1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_1);
             // Initialize the left slaves
             WPI_TalonSRX left2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_2);
-            left2.follow(left1);
             WPI_TalonSRX left3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_3);
-            left3.follow(left1);
 
             // Initialize the right master
             WPI_TalonSRX right1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_1);
             // Initialize the left slaves
             WPI_TalonSRX right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
-            right2.follow(right1);
             WPI_TalonSRX right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
-            right3.follow(right1);
 
-            SmartDashboard.putNumber("P", 0);
-            SmartDashboard.putNumber("I", 0);
-            SmartDashboard.putNumber("D", 0);
-
-
-            SmartDashboard.putNumber("Turn Const", 0.8);
-
-            instance = new Drive(left1, right1);
+            instance = new Drive(left1, left2, left3, right1, right2, right3);
 
         }
         return instance;
@@ -101,18 +91,50 @@ public class Drive extends DifferentialDrive{
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (WPI_TalonSRX left, WPI_TalonSRX right){
+    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3){
         // Call DifferentialDrive with the controllers
-        super (left, right);
+        super (left1, right1);
         // Save the groups
-        this.left = left;
-        this.right = right;
+        this.left = left1;
+        this.right = right1;
+
+        /* Factory Default all hardware to prevent unexpected behaviour */
+        left1.configFactoryDefault();
+        left2.configFactoryDefault();
+        left3.configFactoryDefault();
+        
+        left2.follow(left1);
+        left3.follow(left1);
+
+        left2.setInverted(InvertType.FollowMaster);
+        left3.setInverted(InvertType.FollowMaster);
+
+        /* Factory Default all hardware to prevent unexpected behaviour */
+        right1.configFactoryDefault();
+        right2.configFactoryDefault();
+        right3.configFactoryDefault();
+                    
+        right2.follow(right1);
+        right3.follow(right1);
+
+        right2.setInverted(InvertType.FollowMaster);
+        right3.setInverted(InvertType.FollowMaster);
+
+        /* [3] flip values so robot moves forward when stick-forward/LEDs-green */
+        right1.setInverted(true); 
+        left1.setInverted(false);
+
+        /*
+         * WPI drivetrain classes defaultly assume left and right are opposite. call
+         * this so we can apply + to both sides when moving forward. DO NOT CHANGE
+         */
+        super.setRightSideInverted(false);
 
         // Initialize the gyro
         gyro = new ADXRS450_Gyro();
 
         // Further init
-        init();
+        //init();
         
     }
 
@@ -124,10 +146,6 @@ public class Drive extends DifferentialDrive{
         /* Disable all motor controllers */
 		left.set(ControlMode.PercentOutput, 0);
 		right.set(ControlMode.PercentOutput, 0);
-
-		/* Factory Default all hardware to prevent unexpected behaviour */
-		left.configFactoryDefault();
-		right.configFactoryDefault();
 		
 		/* Set Neutral Mode */
 		left.setNeutralMode(NeutralMode.Brake);

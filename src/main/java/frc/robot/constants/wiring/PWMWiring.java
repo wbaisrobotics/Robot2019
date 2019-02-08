@@ -15,7 +15,7 @@ public enum PWMWiring {
 
     // Ball Elevator/Shooter ports (VICTOR SP - 30A) 
     BALL_ELEVATOR (4),
-    BALL_SHOOTER (4),
+    BALL_SHOOTER (5),
 
     // Death Crawler Arm (VICTOR SP - 40A)
     DEATH_CRAWLER_ARM (6);
