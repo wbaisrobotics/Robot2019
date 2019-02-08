@@ -39,7 +39,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the left side
             // Initialize the left motor 
-            SpeedController leftMotor = SpeedControllers.getVictor(PWMWiring.VIC_0);//SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_LEFT);
+            SpeedController leftMotor = SpeedControllers.getVictor(PWMWiring.CLIMBER_FRONT_LEFT);
             // Initialize the left retracted switch
             LimitSwitch leftRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(leftRetractedSwitch);
@@ -49,7 +49,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the right side
             // Initialize the right motor 
-            SpeedController rightMotor = SpeedControllers.getVictor(PWMWiring.VIC_1);//SpeedControllers.getTalonSRX(CANWiring.FRONT_CLIMBER_RIGHT);
+            SpeedController rightMotor = SpeedControllers.getVictor(PWMWiring.CLIMBER_FRONT_RIGHT);
             // Initialize the right retracted switch
             LimitSwitch rightRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(rightRetractedSwitch);

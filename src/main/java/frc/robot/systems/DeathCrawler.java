@@ -8,6 +8,9 @@ import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.PWMWiring;
 
+/**
+ * Class representing the death crawler (both worm arm and the crawler)
+ */
 public class DeathCrawler{
 
     /**
@@ -24,8 +27,10 @@ public class DeathCrawler{
         if (instance == null){
             // then initialize:
 
+            // Initialize the worm arm motor
             SpeedController armMotor = SpeedControllers.getVictor(PWMWiring.DEATH_CRAWLER_ARM);
 
+            // Initialize the death crawler motor
             CANSparkMax deathCrawlMotor = SpeedControllers.getSpartMaxBrushless(CANWiring.DEATH_CRAWLER);
             
             instance = new DeathCrawler(deathCrawlMotor, armMotor);

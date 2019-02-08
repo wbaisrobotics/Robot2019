@@ -6,11 +6,18 @@ package frc.robot.constants.wiring;
 public enum PWMWiring {
 
     // Represents the different PWM devices and their cooresponding IDs
-    VIC_0 (0),
-    VIC_1 (1),
-    VIC_2 (2),
-    VIC_3 (3),
 
+    // Climber ports (VICTOR SP - 30A)
+    CLIMBER_FRONT_RIGHT (0),
+    CLIMBER_FRONT_LEFT (1),
+    CLIMBER_BACK_RIGHT (2),
+    CLIMBER_BACK_LEFT (3),
+
+    // Ball Elevator/Shooter ports (VICTOR SP - 30A) 
+    BALL_ELEVATOR (4),
+    BALL_SHOOTER (4),
+
+    // Death Crawler Arm (VICTOR SP - 40A)
     DEATH_CRAWLER_ARM (6);
 
     /** The stored port */

@@ -6,18 +6,16 @@ package frc.robot.constants.wiring;
 public enum CANWiring {
 
     // Represents the different CAN devices and their cooresponding IDs
-    DRIVE_LEFT_1 (20),
-    DRIVE_LEFT_2 (21),
-    DRIVE_LEFT_3 (22),
-    DRIVE_RIGHT_1 (23),
-    DRIVE_RIGHT_2 (24),
-    DRIVE_RIGHT_3 (25),
 
-    FRONT_CLIMBER_LEFT (1),
-    FRONT_CLIMBER_RIGHT (2),
-    BACK_CLIMBER_LEFT (3),
-    BACK_CLIMBER_RIGHT (4),
+    // Drive controllers (TALON SRX - 40A)
+    DRIVE_LEFT_1 (1),
+    DRIVE_LEFT_2 (2),
+    DRIVE_LEFT_3 (6),
+    DRIVE_RIGHT_1 (3),
+    DRIVE_RIGHT_2 (4),
+    DRIVE_RIGHT_3 (5),
 
+    // Death Crawler controllers (SPARK MAX - 40A)
     DEATH_CRAWLER (27),
     ;
 

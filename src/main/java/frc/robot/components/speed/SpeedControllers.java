@@ -24,7 +24,7 @@ public class SpeedControllers{
         // Initialize the controller
         CANSparkMax controller = new CANSparkMax(port.getPort(), MotorType.kBrushless);
         // Log the creation
-        Logger.log("CANSparkMax-Brushless Initialzied with CAN ID: " + controller.getDeviceId());
+        Logger.log("CANSparkMax-Brushless Initialzied with CAN ID: " + controller.getDeviceId() + " for " + port.toString());
         // Return the controller
         return controller;
     }
@@ -38,7 +38,7 @@ public class SpeedControllers{
         // Initialize the controller
         WPI_TalonSRX controller = new WPI_TalonSRX(port.getPort());
         // Log the creation
-        Logger.log("WPI_TalonSRX Initialzied with CAN ID: " + controller.getDeviceID());
+        Logger.log("WPI_TalonSRX Initialzied with CAN ID: " + controller.getDeviceID() + " for " + port.toString());
         // Return the controller
         return controller;
     }
@@ -52,7 +52,7 @@ public class SpeedControllers{
         // Initialize the controller
         WPI_VictorSPX controller = new WPI_VictorSPX(port.getPort());
         // Log the creation
-        Logger.log("WPI_VictorSPX Initialzied with CAN ID: " + controller.getDeviceID());
+        Logger.log("WPI_VictorSPX Initialzied with CAN ID: " + controller.getDeviceID() + " for " + port.toString());
         // Return the controller
         return controller;
     }
@@ -66,7 +66,7 @@ public class SpeedControllers{
         // Initialize the controller
         Victor controller = new Victor(port.getPort());
         // Log the creation
-        Logger.log("Victor Initialzied on PWM Port " + port.getPort());
+        Logger.log("Victor Initialzied on PWM Port " + port.getPort() + " for " + port.toString());
         // Return the controller
         return controller;
     }

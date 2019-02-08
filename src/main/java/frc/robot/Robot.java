@@ -8,14 +8,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import frc.robot.components.speed.SpeedControllers;
-import frc.robot.constants.wiring.PWMWiring;
 import frc.robot.oi.OI;
 import frc.robot.systems.BackClimbers;
-import frc.robot.systems.Drive;
+import frc.robot.systems.DeathCrawler;
 import frc.robot.systems.FrontClimbers;
 import frc.robot.util.Logger;
 
@@ -28,8 +25,6 @@ import frc.robot.util.Logger;
  */
 public class Robot extends TimedRobot {
 
-  private Victor vic3;
-  
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -45,19 +40,19 @@ public class Robot extends TimedRobot {
     /**
      * Initializes the front climbers instance
      */
-    //FrontClimbers.getInstance();
-
-    vic3 = SpeedControllers.getVictor(PWMWiring.VIC_3);
+    FrontClimbers.getInstance();
 
     /**
      * Initializes the back climbers instance
      */
-    //BackClimbers.getInstance();
+    BackClimbers.getInstance();
 
     /**
      * Initializes the OI
      */
     //OI.initButtons();
+
+    DeathCrawler.getInstance();
 
   }
 
@@ -103,16 +98,23 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    // if (OI.getPilot().getAButton()){
-    //   FrontClimbers.getInstance().extend();
-    // }
-    // else if (OI.getPilot().getBButton()){
-    //   FrontClimbers.getInstance().retract();
-    // }
-    // else{
-    //   FrontClimbers.getInstance().stop();
-    // }
-    vic3.set(OI.getPilot().getY(Hand.kLeft) * 0.5);
+    
+    if (OI.getPilot().getAButton()){
+      FrontClimbers.getInstance().extend();
+      BackClimbers.getInstance().extend();
+    }
+    else if (OI.getPilot().getBButton()){
+      FrontClimbers.getInstance().retract();
+      BackClimbers.getInstance().retract();
+    }
+    else{
+      FrontClimbers.getInstance().stop();
+      BackClimbers.getInstance().stop();
+    }
+
+    DeathCrawler.getInstance().setCrawlSpeed(OI.getPilot().getX(Hand.kLeft));
+
+    DeathCrawler.getInstance().setWormSpeed(OI.getPilot().getY(Hand.kRight));
 
   }
 
