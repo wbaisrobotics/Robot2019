@@ -10,10 +10,10 @@ public enum CANWiring {
     // Drive controllers (TALON SRX - 40A)
     DRIVE_LEFT_1 (1),
     DRIVE_LEFT_2 (2),
-    DRIVE_LEFT_3 (6),
-    DRIVE_RIGHT_1 (3),
-    DRIVE_RIGHT_2 (4),
-    DRIVE_RIGHT_3 (5),
+    DRIVE_LEFT_3 (3),
+    DRIVE_RIGHT_1 (4),
+    DRIVE_RIGHT_2 (5),
+    DRIVE_RIGHT_3 (6),
 
     // Death Crawler controllers (SPARK MAX - 40A)
     DEATH_CRAWLER (27),

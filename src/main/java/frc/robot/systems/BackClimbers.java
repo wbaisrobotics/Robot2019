@@ -110,7 +110,7 @@ public class BackClimbers extends Subsystem{
     }
 
     /**
-     * Extends both front motors together (each will independently halt when they hit their switch)
+     * Extends both back motors together (each will independently halt when they hit their switch)
      * @return - true if both finished
      */
     public boolean extend (){
@@ -120,12 +120,15 @@ public class BackClimbers extends Subsystem{
     }
 
     /**
-     * Retracts both front motors together (each will independently halt when they hit their switch)
+     * Retracts both back motors together (each will independently halt when they hit their switch)
      * @return - true if both finished
      */
     public boolean retract (){
-        boolean leftDone = this.leftMotor.setControlled(RETRACT_POWER);
-        boolean rightDone = this.rightMotor.setControlled(RETRACT_POWER);
+        // TO CHANGE BACK
+        boolean leftDone = false;
+        this.leftMotor.set(RETRACT_POWER);
+        boolean rightDone = false;
+        this.rightMotor.set(RETRACT_POWER);
         return  leftDone && rightDone;
     }
 

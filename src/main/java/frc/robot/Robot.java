@@ -7,9 +7,12 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -32,12 +35,14 @@ import frc.robot.util.Logger;
  */
 public class Robot extends TimedRobot {
 
-  private WPI_TalonSRX left1;
-  private WPI_TalonSRX left2;
-  private WPI_TalonSRX left3;
-  private WPI_TalonSRX right1;
-  private WPI_TalonSRX right2;
-  private WPI_TalonSRX right3;
+  private TalonSRX left1;
+  private TalonSRX left2;
+  private TalonSRX left3;
+  private TalonSRX right1;
+  private TalonSRX right2;
+  private TalonSRX right3;
+
+  private DoubleSolenoid sol;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -51,6 +56,8 @@ public class Robot extends TimedRobot {
      */
     //Drive.getInstance();
 
+    sol = new DoubleSolenoid (1, 2);
+
     // Initialize the left master
     left1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_1);
     // Initialize the left slaves
@@ -63,14 +70,17 @@ public class Robot extends TimedRobot {
     right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
     right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
 
-
     /* Factory Default all hardware to prevent unexpected behaviour */
     left1.configFactoryDefault();
     left2.configFactoryDefault();
     left3.configFactoryDefault();
+
+    left1.setInverted(false);
         
-    left2.follow(left1);
-    left3.follow(left1);
+    // left2.follow(left1);
+    // left3.follow(left1);
+    left2.set(ControlMode.Follower, left1.getDeviceID());
+    left3.set(ControlMode.Follower, left1.getDeviceID());
 
     left2.setInverted(InvertType.FollowMaster);
     left3.setInverted(InvertType.FollowMaster);
@@ -79,16 +89,17 @@ public class Robot extends TimedRobot {
     right1.configFactoryDefault();
     right2.configFactoryDefault();
     right3.configFactoryDefault();
+
+    right1.setInverted(true); 
                     
-    right2.follow(right1);
-    right3.follow(right1);
+    // right2.follow(right1);
+    // right3.follow(right1);
+
+    right2.set(ControlMode.Follower, right1.getDeviceID());
+    right3.set(ControlMode.Follower, right1.getDeviceID());
 
     right2.setInverted(InvertType.FollowMaster);
     right3.setInverted(InvertType.FollowMaster);
-
-    /* [3] flip values so robot moves forward when stick-forward/LEDs-green */
-    right1.setInverted(true); 
-    left1.setInverted(false);
 
     /**
      * Initializes the front climbers instance
@@ -146,6 +157,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    left1.set(ControlMode.PercentOutput, 0.5);
+    right1.set(ControlMode.PercentOutput, 0.5);
+
     /**
      * Run the scheduler
      */
@@ -159,9 +173,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-
-    left1.set (1.0);
-    right1.set(1.0);
 
     //Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), OI.getPilot().getX(Hand.kLeft));
     
@@ -178,23 +189,23 @@ public class Robot extends TimedRobot {
       BackClimbers.getInstance().stop();
     }
 
-    if (OI.getPilot().getBumper(Hand.kRight)){
+    if (OI.getPilot().getBumper(Hand.kLeft)){
       BallManipulator.getInstance().liftBall();
     }
     else{
       BallManipulator.getInstance().stopElevator();
     }
 
-    if (OI.getPilot().getBumper(Hand.kLeft)){
+    if (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.3){
       BallManipulator.getInstance().shooterOut();
     }
     else{
       BallManipulator.getInstance().stopShooter();
     }
 
-    DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getX(Hand.kRight)) > 0.2? OI.getPilot().getX(Hand.kRight):0);
+    DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.2? OI.getPilot().getTriggerAxis(Hand.kRight)*0.5:0);
 
-    DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kRight)) > 0.2? OI.getPilot().getY(Hand.kRight):0);
+    DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kLeft)) > 0.1? OI.getPilot().getY(Hand.kLeft):0);
 
   }
 

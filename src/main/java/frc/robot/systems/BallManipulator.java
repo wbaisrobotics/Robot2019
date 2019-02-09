@@ -14,22 +14,22 @@ public class BallManipulator{
     /**
      * The speed for lifting a ball in the elevator
      */
-    public final double ELEVATOR_UP_SPEED = 1.0;
+    public final double ELEVATOR_UP_SPEED = -0.5;
 
     /**
      * The speed for lowering a ball in the elevator
      */
-    public final double ELEVATOR_DOWN_SPEED = -1.0;
+    public final double ELEVATOR_DOWN_SPEED = 0.5;
 
     /**
      * The speed for shooting a ball out in the shooter
      */
-    public final double SHOOTER_OUT_SPEED = 1.0;
+    public final double SHOOTER_OUT_SPEED = -0.5;
 
     /**
      * The speed for shooting a ball in in the shooter
      */
-    public final double SHOOTER_IN_SPEED = -1.0;
+    public final double SHOOTER_IN_SPEED = 0.5;
 
     /**
      * The instance of the system

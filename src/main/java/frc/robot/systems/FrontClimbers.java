@@ -97,7 +97,7 @@ public class FrontClimbers extends Subsystem{
     SpeedController rightMotor, LimitSwitch rightRetractedSwitch, LimitSwitch rightExtendedSwitch){
 
         // Don't invert the left motor
-        leftMotor.setInverted(false);
+        leftMotor.setInverted(true);
         
         // Initialize the left motor ranged controller with
         // the left extended switch representing the switch that halts motion in the + [Raw] (extending) direction when activated
@@ -129,8 +129,11 @@ public class FrontClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean retract (){
-        boolean leftDone = this.leftMotor.setControlled(RETRACT_POWER);
-        boolean rightDone = this.rightMotor.setControlled(RETRACT_POWER);
+        // TO CHANGE BACK
+        boolean leftDone = false;
+        this.leftMotor.set(RETRACT_POWER);
+        boolean rightDone = false;
+        this.rightMotor.set(RETRACT_POWER);
         return  leftDone && rightDone;
     }
 
