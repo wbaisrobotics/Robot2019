@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.oi.OI;
@@ -24,7 +25,12 @@ import frc.robot.systems.BallManipulator;
 import frc.robot.systems.DeathCrawler;
 import frc.robot.systems.Drive;
 import frc.robot.systems.FrontClimbers;
+import frc.robot.systems.HatchManipulator;
 import frc.robot.util.Logger;
+
+import frc.robot.oi.POVDirection;
+
+import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,16 +40,6 @@ import frc.robot.util.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-
-  private TalonSRX left1;
-  private TalonSRX left2;
-  private TalonSRX left3;
-  private TalonSRX right1;
-  private TalonSRX right2;
-  private TalonSRX right3;
-
-  private DoubleSolenoid sol;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -51,55 +47,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
+    
+
     /**
      * Initializes the drive instance
      */
-    //Drive.getInstance();
-
-    sol = new DoubleSolenoid (1, 2);
-
-    // Initialize the left master
-    left1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_1);
-    // Initialize the left slaves
-    left2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_2);
-    left3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_3);
-
-    // Initialize the right master
-    right1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_1);
-    // Initialize the left slaves
-    right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
-    right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
-
-    /* Factory Default all hardware to prevent unexpected behaviour */
-    left1.configFactoryDefault();
-    left2.configFactoryDefault();
-    left3.configFactoryDefault();
-
-    left1.setInverted(false);
-        
-    // left2.follow(left1);
-    // left3.follow(left1);
-    left2.set(ControlMode.Follower, left1.getDeviceID());
-    left3.set(ControlMode.Follower, left1.getDeviceID());
-
-    left2.setInverted(InvertType.FollowMaster);
-    left3.setInverted(InvertType.FollowMaster);
-
-    /* Factory Default all hardware to prevent unexpected behaviour */
-    right1.configFactoryDefault();
-    right2.configFactoryDefault();
-    right3.configFactoryDefault();
-
-    right1.setInverted(true); 
-                    
-    // right2.follow(right1);
-    // right3.follow(right1);
-
-    right2.set(ControlMode.Follower, right1.getDeviceID());
-    right3.set(ControlMode.Follower, right1.getDeviceID());
-
-    right2.setInverted(InvertType.FollowMaster);
-    right3.setInverted(InvertType.FollowMaster);
+    Drive.getInstance();
 
     /**
      * Initializes the front climbers instance
@@ -120,6 +74,11 @@ public class Robot extends TimedRobot {
      * Initialize the Ball Manipulator
      */
     BallManipulator.getInstance();
+
+    /**
+     * Initialize the Hatch Manipulator
+     */
+    HatchManipulator.getInstance();
 
     /**
      * Initializes the OI
@@ -152,13 +111,13 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
+    Drive.getInstance().getLeft().setSelectedSensorPosition(0);
+    Drive.getInstance().getRight().setSelectedSensorPosition(0);
+
   }
 
   @Override
   public void teleopPeriodic() {
-
-    left1.set(ControlMode.PercentOutput, 0.5);
-    right1.set(ControlMode.PercentOutput, 0.5);
 
     /**
      * Run the scheduler
@@ -174,14 +133,28 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
 
-    //Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), OI.getPilot().getX(Hand.kLeft));
-    
+    if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+      Drive.getInstance().toggleGearSpeed();
+    }
+
+    if (OI.getCoPilot().getBButtonPressed()){
+      Drive.getInstance().toggleReverse();
+      //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
+    }
+
+    Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
+
+    SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
+    SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
+
     if (OI.getPilot().getAButton()){
       FrontClimbers.getInstance().extend();
       BackClimbers.getInstance().extend();
     }
     else if (OI.getPilot().getBButton()){
       FrontClimbers.getInstance().retract();
+    }
+    else if (OI.getPilot().getXButton()){
       BackClimbers.getInstance().retract();
     }
     else{
@@ -189,23 +162,37 @@ public class Robot extends TimedRobot {
       BackClimbers.getInstance().stop();
     }
 
-    if (OI.getPilot().getBumper(Hand.kLeft)){
+    if (OI.getCoPilot().getBumper(Hand.kLeft)){
       BallManipulator.getInstance().liftBall();
     }
     else{
       BallManipulator.getInstance().stopElevator();
     }
 
-    if (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.3){
+    if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.3){
       BallManipulator.getInstance().shooterOut();
     }
     else{
       BallManipulator.getInstance().stopShooter();
     }
 
-    DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.2? OI.getPilot().getTriggerAxis(Hand.kRight)*0.5:0);
+    if (OI.getCoPilot().getYButton()){
+      HatchManipulator.getInstance().thunkerDown();
+    }
+    else{
+      HatchManipulator.getInstance().thunkerUp();
+    }
 
-    DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kLeft)) > 0.1? OI.getPilot().getY(Hand.kLeft):0);
+    if (OI.getCoPilot().getXButton()){
+      HatchManipulator.getInstance().shooterOut();
+    }
+    else{
+      HatchManipulator.getInstance().shooterIn();
+    }
+
+    DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.5:0);
+
+    DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
 
   }
 

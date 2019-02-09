@@ -11,23 +11,31 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.wiring.CANWiring;
+import frc.robot.constants.wiring.PCMWiring;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderFRC;
 import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 import com.revrobotics.ControlType;
-import frc.robot.components.encoders.EncoderFollower;
 
 import frc.robot.components.speed.CANSparkMaxGroup;
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drive extends DifferentialDrive{
+
+    public final static boolean LEFT_SIDE_REVERSE = false;
+    public final static boolean RIGHT_SIDE_REVERSE = true;
 
     /**
 	 * Set to zero to skip waiting for confirmation.
@@ -75,7 +83,10 @@ public class Drive extends DifferentialDrive{
             WPI_TalonSRX right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
             WPI_TalonSRX right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
 
-            instance = new Drive(left1, left2, left3, right1, right2, right3);
+            // Initialize the gear shifter
+            DoubleSolenoid gearShifter = new DoubleSolenoid (PCMWiring.G_A.getPort(), PCMWiring.G_B.getPort());
+
+            instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, null);
 
         }
         return instance;
@@ -84,102 +95,76 @@ public class Drive extends DifferentialDrive{
     private WPI_TalonSRX left;
     private WPI_TalonSRX right;
 
-    private ADXRS450_Gyro gyro;
+    private DoubleSolenoid gearShifter;
+
+    private Gyro gyro;
+
+    private boolean reverse = false;
 
     /**
      * Default constructor for just the motors and no encoders
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3){
+    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro){
+
         // Call DifferentialDrive with the controllers
         super (left1, right1);
-        // Save the groups
+        // Save the controllers
         this.left = left1;
         this.right = right1;
 
-        /* Factory Default all hardware to prevent unexpected behaviour */
+        // Save the gyro
+        this.gyro = gyro;
+
+        // Save the gear shifter
+        this.gearShifter = gearShifter;
+
+        // Factory default all the talons to prevent unexpected behavior
         left1.configFactoryDefault();
         left2.configFactoryDefault();
         left3.configFactoryDefault();
-        
-        left2.follow(left1);
-        left3.follow(left1);
-
-        left2.setInverted(InvertType.FollowMaster);
-        left3.setInverted(InvertType.FollowMaster);
-
-        /* Factory Default all hardware to prevent unexpected behaviour */
         right1.configFactoryDefault();
         right2.configFactoryDefault();
         right3.configFactoryDefault();
-                    
-        right2.follow(right1);
-        right3.follow(right1);
 
+        // Set the inverted settings for the masters
+        left1.setInverted(LEFT_SIDE_REVERSE);
+        right1.setInverted(RIGHT_SIDE_REVERSE); 
+
+        // Configure the other talons to follow
+        left2.set(ControlMode.Follower, left1.getDeviceID());
+        left3.set(ControlMode.Follower, left1.getDeviceID());
+        right2.set(ControlMode.Follower, right1.getDeviceID());
+        right3.set(ControlMode.Follower, right1.getDeviceID());
+
+        // Configure the other talons to invert
+        left2.setInverted(InvertType.FollowMaster);
+        left3.setInverted(InvertType.FollowMaster);
         right2.setInverted(InvertType.FollowMaster);
         right3.setInverted(InvertType.FollowMaster);
 
-        /* [3] flip values so robot moves forward when stick-forward/LEDs-green */
-        right1.setInverted(true); 
-        left1.setInverted(false);
-
-        /*
-         * WPI drivetrain classes defaultly assume left and right are opposite. call
-         * this so we can apply + to both sides when moving forward. DO NOT CHANGE
-         */
+        // Stop the WPILib class from inverting the right side
         super.setRightSideInverted(false);
 
-        // Initialize the gyro
-        gyro = new ADXRS450_Gyro();
-
-        // Further init
-        //init();
-        
-    }
-
-    /**
-     * Further initializes the controllers
-     */
-    private void init(){
-
-        /* Disable all motor controllers */
-		left.set(ControlMode.PercentOutput, 0);
-		right.set(ControlMode.PercentOutput, 0);
-		
-		/* Set Neutral Mode */
-		left.setNeutralMode(NeutralMode.Brake);
-		right.setNeutralMode(NeutralMode.Brake);
-		
-		/** Feedback Sensor Configuration */
-		
-		/* Configure Selected Sensor for Motion Profile */
-        left.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PID_PRIMARY, kTimeoutMs);
-        /* Keep sensor and motor in phase, postive sensor values when MC LEDs are green */
-		left.setSensorPhase(true);
-                                            
-        /* Configure Selected Sensor for Motion Profile */
-        right.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PID_PRIMARY, kTimeoutMs);
-        /* Keep sensor and motor in phase, postive sensor values when MC LEDs are green */
-        right.setSensorPhase(true);
         
         /* Configure PID Gains, to be used with Motion Profile */
 		
 
-		/* Our profile uses 10ms timing */
-        left.configMotionProfileTrajectoryPeriod(10, kTimeoutMs); 
+		// /* Our profile uses 10ms timing */
+        // left.configMotionProfileTrajectoryPeriod(10, kTimeoutMs); 
         
 		
-		/* Status 10 provides the trajectory target for motion profile AND motion magic */
-        left.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
+		// /* Status 10 provides the trajectory target for motion profile AND motion magic */
+        // left.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
         
-        updatePID();
+        // updatePID();
 
-		/* Our profile uses 10ms timing */
-		right.configMotionProfileTrajectoryPeriod(10, kTimeoutMs); 
+		// /* Our profile uses 10ms timing */
+		// right.configMotionProfileTrajectoryPeriod(10, kTimeoutMs); 
 		
-		/* Status 10 provides the trajectory target for motion profile AND motion magic */
-		right.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
+		// /* Status 10 provides the trajectory target for motion profile AND motion magic */
+		// right.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, 10, kTimeoutMs);
 
     }
 
@@ -245,50 +230,50 @@ public class Drive extends DifferentialDrive{
      */
     public void drivePath (String pathName){
 
-        // Trajectory left_trajectory = PathfinderFRC.getTrajectory(pathName + ".left");
-        // Trajectory right_trajectory = PathfinderFRC.getTrajectory(pathName + ".right");
+        Trajectory left_trajectory = PathfinderFRC.getTrajectory(pathName + ".left");
+        Trajectory right_trajectory = PathfinderFRC.getTrajectory(pathName + ".right");
 
-        // m_left_follower = new EncoderFollower(left_trajectory);
-        // m_right_follower = new EncoderFollower(right_trajectory);
+        m_left_follower = new EncoderFollower(left_trajectory);
+        m_right_follower = new EncoderFollower(right_trajectory);
 
-        // m_left_follower.configureEncoder((int)left.getEncoderPosition(), -113, 0.15);
-        // // You must tune the PID values on the following line!
-        // //m_left_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
+        m_left_follower.configureEncoder((int)left.getSelectedSensorPosition(), -113, 0.15);
+        // You must tune the PID values on the following line!
+        //m_left_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
-        // m_right_follower.configureEncoder((int)right.getEncoderPosition(), 113, 0.15);
-        // // You must tune the PID values on the following line!
-        // //m_right_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
+        m_right_follower.configureEncoder((int)right.getSelectedSensorPosition(), 113, 0.15);
+        // You must tune the PID values on the following line!
+        //m_right_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
-        // m_follower_notifier = new Notifier(this::followPath);
-        // m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+        m_follower_notifier = new Notifier(this::followPath);
+        m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
 
     }
 
     private void followPath() {
-        // if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
-        //   m_follower_notifier.stop();
-        //   left.stopMotor();
-        //   right.stopMotor();
-        // } else {
+        if (m_left_follower.isFinished() || m_right_follower.isFinished()) {
+          m_follower_notifier.stop();
+          left.stopMotor();
+          right.stopMotor();
+        } else {
 
-        //     updatePID();
+            updatePID();
 
-        //   double left_speed = m_left_follower.calculate((int)left.getEncoderPosition());
-        //   double right_speed = m_right_follower.calculate((int)right.getEncoderPosition());
-        //   double heading = gyro.getAngle();
-        //   double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-        //   double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-        //   double turn =  SmartDashboard.getNumber("Turn Const", 0.8) * (-1.0/80.0) * heading_difference;
-        //   //left.set((left_speed + turn));
-        //   //right.set(-(right_speed - turn));
+          double left_speed = m_left_follower.calculate((int)left.getSelectedSensorPosition());
+          double right_speed = m_right_follower.calculate((int)right.getSelectedSensorPosition());
+          double heading = gyro.getAngle();
+          double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+          double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+          double turn =  SmartDashboard.getNumber("Turn Const", 0.8) * (-1.0/80.0) * heading_difference;
+          left.set((left_speed + turn));
+          right.set(-(right_speed - turn));
         //   left.getPIDController().setReference(left_speed, ControlType.kPosition);
         //   right.getPIDController().setReference(right_speed, ControlType.kPosition);
 
-        //   SmartDashboard.putNumber ("Left Speed", left_speed + turn);
-        //   SmartDashboard.putNumber ("Right Speed", -(right_speed - turn));
+          SmartDashboard.putNumber ("Left Speed", left_speed + turn);
+          SmartDashboard.putNumber ("Right Speed", -(right_speed - turn));
 
-        //   System.out.println((left_speed + turn) + ":" + -(right_speed - turn));
-        // }
+          System.out.println((left_speed + turn) + ":" + -(right_speed - turn));
+        }
       }
 
       public WPI_TalonSRX getLeft(){
@@ -297,6 +282,40 @@ public class Drive extends DifferentialDrive{
 
       public WPI_TalonSRX getRight(){
         return this.right;
+      }
+
+      /**
+       * Updatest the reverse setting and sends to talons
+       * @param reverse - the new value for reverse
+       */
+      public void setReverse (boolean reverse){
+
+        System.out.println("Swapped face to: " + reverse);
+
+        this.reverse = reverse;
+
+        this.left.setInverted(reverse?!LEFT_SIDE_REVERSE:LEFT_SIDE_REVERSE);
+
+        this.right.setInverted(reverse?!RIGHT_SIDE_REVERSE:RIGHT_SIDE_REVERSE);
+
+      }
+
+      public void toggleReverse (){
+        this.left.setInverted(!this.left.getInverted());
+
+        this.right.setInverted(!this.right.getInverted());
+      }
+
+      /**
+       * Returns whether or not driving is reversed
+       * @return - the current status of the reverse boolean
+       */
+      public boolean getReverse (){
+          return this.reverse;
+      }
+
+      public void toggleGearSpeed (){
+          this.gearShifter.set(this.gearShifter.get() == Value.kForward?Value.kReverse:Value.kForward);
       }
 
 }
