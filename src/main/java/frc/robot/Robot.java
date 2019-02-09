@@ -7,18 +7,10 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.components.speed.SpeedControllers;
-import frc.robot.constants.wiring.CANWiring;
 import frc.robot.oi.OI;
 import frc.robot.systems.BackClimbers;
 import frc.robot.systems.BallManipulator;
@@ -27,8 +19,6 @@ import frc.robot.systems.Drive;
 import frc.robot.systems.FrontClimbers;
 import frc.robot.systems.HatchManipulator;
 import frc.robot.util.Logger;
-
-import frc.robot.oi.POVDirection;
 
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -40,16 +30,18 @@ import edu.wpi.first.cameraserver.CameraServer;
  * project.
  */
 public class Robot extends TimedRobot {
+
   /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
+   * Initializes the robot and its systems
    */
   @Override
   public void robotInit() {
 
+    /**
+     *  Begin capturing and sending images for the driver camera
+     */
     CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
     
-
     /**
      * Initializes the drive instance
      */
@@ -111,13 +103,15 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
-    Drive.getInstance().getLeft().setSelectedSensorPosition(0);
-    Drive.getInstance().getRight().setSelectedSensorPosition(0);
-
   }
 
   @Override
   public void teleopPeriodic() {
+
+    /**
+     * Run the scheduler
+     */
+    // Scheduler.getInstance().run();
 
     if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
       Drive.getInstance().toggleGearSpeed();
@@ -179,27 +173,6 @@ public class Robot extends TimedRobot {
     DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.5:0);
 
     DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
-
-
-    /**
-     * Run the scheduler
-     */
-    // Scheduler.getInstance().run();
-
-    // if (OI.getCoPilot().getBButtonPressed()){
-    //   Drive.getInstance().toggleReverse();
-    //   //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
-    // }
-
-    // if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
-    //   Drive.getInstance().toggleGearSpeed();
-    // }
-
-    // // Drive.getInstance().arcadeDrive(0.5, 0); 
-    // Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
-
-    // SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
-    // SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
 
   }
 
