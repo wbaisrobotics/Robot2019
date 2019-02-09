@@ -2,13 +2,8 @@
 package frc.robot.systems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -24,10 +19,6 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-
-import com.revrobotics.ControlType;
-
-import frc.robot.components.speed.CANSparkMaxGroup;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -48,12 +39,12 @@ public class Drive extends DifferentialDrive{
 
       //private static final int k_ticks_per_rev = 1024;
     //private static final double k_wheel_diameter = 4.0 / 12.0;
-    private static final double k_max_velocity = 10;
+    // private static final double k_max_velocity = 10;
 
-    private static final int k_left_channel = 0;
-    private static final int k_right_channel = 1;
+    // private static final int k_left_channel = 0;
+    // private static final int k_right_channel = 1;
 
-    private static final int k_gyro_port = 0;
+    // private static final int k_gyro_port = 0;
 
     private EncoderFollower m_left_follower;
     private EncoderFollower m_right_follower;
@@ -86,7 +77,10 @@ public class Drive extends DifferentialDrive{
             // Initialize the gear shifter
             DoubleSolenoid gearShifter = new DoubleSolenoid (PCMWiring.G_A.getPort(), PCMWiring.G_B.getPort());
 
-            instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, null);
+            // Initialize the gyro
+            ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+
+            instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, gyro);
 
         }
         return instance;

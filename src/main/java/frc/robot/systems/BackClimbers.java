@@ -7,7 +7,6 @@ import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
-import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
 import frc.robot.constants.wiring.PWMWiring;
 

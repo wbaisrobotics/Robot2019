@@ -3,7 +3,6 @@ package frc.robot.components.encoders;
 
 import com.revrobotics.CANEncoder;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax;
 
 public class CANEncoderGroup{

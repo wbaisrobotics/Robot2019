@@ -51,13 +51,13 @@ public class OI {
 	
 	private static Map <Integer, Button> buttons = new HashMap <Integer, Button>();
 	
-	private static Button getButton (Controllers controller, ButtonConfiguration config){
-		int index = Cantor.getIndex(controller.getPort(), ButtonType.BUTTON.ordinal(), config.getPort());
-		if (!buttons.containsKey(index)) {
-			buttons.put(index, new JoystickButton (getController (controller), config));
-		}
-		return buttons.get(index);
-	}
+	// private static Button getButton (Controllers controller, ButtonConfiguration config){
+	// 	int index = Cantor.getIndex(controller.getPort(), ButtonType.BUTTON.ordinal(), config.getPort());
+	// 	if (!buttons.containsKey(index)) {
+	// 		buttons.put(index, new JoystickButton (getController (controller), config));
+	// 	}
+	// 	return buttons.get(index);
+	// }
 	
 	private static Button getButton (Controllers controller, POVDirection config){
 		int index = Cantor.getIndex(controller.getPort(), ButtonType.POV.ordinal(), config.getAngle());
@@ -67,13 +67,13 @@ public class OI {
 		return buttons.get(index);
 	}
 	
-	private static Button getButton (Controllers controller, AxisConfiguration config, double low, double high){
-		int index = Cantor.getIndex(controller.getPort(), ButtonType.AXIS.ordinal(), config.getRawAxis());
-		if (!buttons.containsKey(index)) {
-			buttons.put(index, new AxisButton (getController (controller), config, low, high));
-		}
-		return buttons.get(index);
-	}
+	// private static Button getButton (Controllers controller, AxisConfiguration config, double low, double high){
+	// 	int index = Cantor.getIndex(controller.getPort(), ButtonType.AXIS.ordinal(), config.getRawAxis());
+	// 	if (!buttons.containsKey(index)) {
+	// 		buttons.put(index, new AxisButton (getController (controller), config, low, high));
+	// 	}
+	// 	return buttons.get(index);
+	// }
 	
 	private static Button getButton (Button... buttons) {
 		return new ButtonCollection (buttons);

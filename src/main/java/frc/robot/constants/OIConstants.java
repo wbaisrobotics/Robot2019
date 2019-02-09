@@ -1,7 +1,6 @@
 package frc.robot.constants;
 
 import frc.robot.oi.AxisConfiguration;
-import frc.robot.oi.ButtonConfiguration;
 import frc.robot.oi.POVDirection;
 
 public class OIConstants {
