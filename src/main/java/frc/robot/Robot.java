@@ -119,20 +119,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    /**
-     * Run the scheduler
-     */
-    Scheduler.getInstance().run();
-
-  }
-
-  @Override
-  public void testInit() {
-  }
-
-  @Override
-  public void testPeriodic() {
-
     if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
       Drive.getInstance().toggleGearSpeed();
     }
@@ -194,6 +180,35 @@ public class Robot extends TimedRobot {
 
     DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
 
+
+    /**
+     * Run the scheduler
+     */
+    // Scheduler.getInstance().run();
+
+    // if (OI.getCoPilot().getBButtonPressed()){
+    //   Drive.getInstance().toggleReverse();
+    //   //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
+    // }
+
+    // if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+    //   Drive.getInstance().toggleGearSpeed();
+    // }
+
+    // // Drive.getInstance().arcadeDrive(0.5, 0); 
+    // Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
+
+    // SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
+    // SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
+
+  }
+
+  @Override
+  public void testInit() {
+  }
+
+  @Override
+  public void testPeriodic() {
   }
 
 }
