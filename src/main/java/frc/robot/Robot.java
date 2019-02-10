@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.oi.OI;
 import frc.robot.systems.BackClimbers;
 import frc.robot.systems.BallManipulator;
@@ -37,15 +38,10 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    SmartDashboard.putNumber("Left Back Climber Constant", 0);
-    SmartDashboard.putNumber("Right Back Climber Constant", 0);
-    SmartDashboard.putNumber("Left Front Climber Constant", 0);
-    SmartDashboard.putNumber("Right Front Climber Constant", 0);
-
-    SmartDashboard.putNumber("P Const", 0);
-    SmartDashboard.putNumber("I Const", 0);
-    SmartDashboard.putNumber("D Const", 0);
-    SmartDashboard.putNumber("Turn Const", 0.8);
+    /**
+     * Initialize the network table communicator
+     */
+    NetworkTableCommunicator.init();
 
     /**
      *  Begin capturing and sending images for the driver camera
