@@ -2,6 +2,7 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.LimitSwitch;
 import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
@@ -113,9 +114,17 @@ public class BackClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean extend (){
-        boolean leftDone = this.leftMotor.setControlled(EXTEND_POWER);
-        boolean rightDone = this.rightMotor.setControlled(EXTEND_POWER);
+        boolean leftDone = extendLeft();
+        boolean rightDone = extendRight();
         return  leftDone && rightDone;
+    }
+
+    public boolean extendLeft (){
+        return this.leftMotor.setControlled(EXTEND_POWER*SmartDashboard.getNumber("Left Back Climber Constant", 0));
+    }
+
+    public boolean extendRight (){
+        return this.rightMotor.setControlled(EXTEND_POWER*SmartDashboard.getNumber("Right Back Climber Constant", 0));
     }
 
     /**
@@ -123,12 +132,21 @@ public class BackClimbers extends Subsystem{
      * @return - true if both finished
      */
     public boolean retract (){
-        // TO CHANGE BACK
-        boolean leftDone = false;
-        this.leftMotor.set(RETRACT_POWER);
-        boolean rightDone = false;
-        this.rightMotor.set(RETRACT_POWER);
+        boolean leftDone = retractLeft();
+        boolean rightDone = retractRight();
         return  leftDone && rightDone;
+    }
+
+    public boolean retractLeft (){
+        // TO CHANGE BACK
+        this.leftMotor.set(RETRACT_POWER * SmartDashboard.getNumber("Left Back Climber Constant", 0));
+        return false;
+    }
+
+    public boolean retractRight (){
+        // TO CHANGE BACK
+        this.rightMotor.set(RETRACT_POWER * SmartDashboard.getNumber("Right Back Climber Constant", 0));
+        return false;
     }
 
     /**
@@ -147,14 +165,21 @@ public class BackClimbers extends Subsystem{
         return this.leftMotor.reverseSwitchActivated() && this.rightMotor.reverseSwitchActivated();
     }
 
+    public void stopLeft (){
+        this.leftMotor.stopMotor();
+    }
+    public void stopRight (){
+        this.rightMotor.stopMotor();
+    }
+
     /**
      * Stops the motors
      */
     public void stop(){
         // Stop the left motor
-        this.leftMotor.stopMotor();
+        stopLeft();
         // Stop the right motor
-        this.rightMotor.stopMotor();
+        stopRight();
     }
 
     /**

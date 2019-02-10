@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.PWMWiring;
 import frc.robot.util.Logger;
@@ -39,6 +40,8 @@ public class SpeedControllers{
         WPI_TalonSRX controller = new WPI_TalonSRX(port.getPort());
         // Log the creation
         Logger.log("WPI_TalonSRX Initialzied with CAN ID: " + controller.getDeviceID() + " for " + port.toString());
+        // Add to smart dashboard
+        SmartDashboard.putData(port.toString(), controller);
         // Return the controller
         return controller;
     }
@@ -53,6 +56,8 @@ public class SpeedControllers{
         WPI_VictorSPX controller = new WPI_VictorSPX(port.getPort());
         // Log the creation
         Logger.log("WPI_VictorSPX Initialzied with CAN ID: " + controller.getDeviceID() + " for " + port.toString());
+        // Add to smart dashboard
+        SmartDashboard.putData(port.toString(), controller);
         // Return the controller
         return controller;
     }
@@ -67,6 +72,8 @@ public class SpeedControllers{
         Victor controller = new Victor(port.getPort());
         // Log the creation
         Logger.log("Victor Initialzied on PWM Port " + port.getPort() + " for " + port.toString());
+        // Add to smart dashboard
+        SmartDashboard.putData(port.toString(), controller);
         // Return the controller
         return controller;
     }

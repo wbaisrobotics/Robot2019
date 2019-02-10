@@ -25,21 +25,21 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class Drive extends DifferentialDrive{
 
+    /**
+     * Whether or not the left side should be reversed
+     */
     public final static boolean LEFT_SIDE_REVERSE = false;
-    public final static boolean RIGHT_SIDE_REVERSE = true;
 
     /**
-	 * Set to zero to skip waiting for confirmation.
-	 * Set to nonzero to wait and report to DS if action fails.
-	 */
-    public final static int kTimeoutMs = 30;
+     * Whether or not the right side should be reversed
+     */
+    public final static boolean RIGHT_SIDE_REVERSE = true;
+
     
-    /* We allow either a 0 or 1 when selecting a PID Index, where 0 is primary and 1 is auxiliary */
-	public final static int PID_PRIMARY = 0;
 
       //private static final int k_ticks_per_rev = 1024;
     //private static final double k_wheel_diameter = 4.0 / 12.0;
-    // private static final double k_max_velocity = 10;
+    private static final double k_max_velocity = 10;
 
     // private static final int k_left_channel = 0;
     // private static final int k_right_channel = 1;
@@ -79,6 +79,7 @@ public class Drive extends DifferentialDrive{
 
             // Initialize the gyro
             ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+            SmartDashboard.putData(gyro);
 
             instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, gyro);
 
@@ -140,7 +141,6 @@ public class Drive extends DifferentialDrive{
 
         // Stop the WPILib class from inverting the right side
         super.setRightSideInverted(false);
-
         
         /* Configure PID Gains, to be used with Motion Profile */
 		
@@ -169,8 +169,8 @@ public class Drive extends DifferentialDrive{
         // Reset the gyro
         gyro.reset();
         // Reset the encoders
-        left.getSensorCollection().setQuadraturePosition(0, kTimeoutMs);
-		right.getSensorCollection().setQuadraturePosition(0, kTimeoutMs);
+        left.getSensorCollection().setQuadraturePosition(0, 30);
+		right.getSensorCollection().setQuadraturePosition(0, 30);
 		System.out.println("[Quadrature Encoders] All sensors are zeroed.");
     }
 
@@ -182,14 +182,14 @@ public class Drive extends DifferentialDrive{
         double f = SmartDashboard.getNumber("F", 0);
         System.out.println(p +":"+ i +":"+d+":"+f);
         // Update the PID Values to what is in the dashboard
-        left.config_kF(PID_PRIMARY, f, kTimeoutMs);
-		left.config_kP(PID_PRIMARY, p, kTimeoutMs);
-		left.config_kI(PID_PRIMARY, i, kTimeoutMs);
-        left.config_kD(PID_PRIMARY, d, kTimeoutMs);
-        right.config_kF(PID_PRIMARY, f, kTimeoutMs);
-		right.config_kP(PID_PRIMARY, p, kTimeoutMs);
-		right.config_kI(PID_PRIMARY, i, kTimeoutMs);
-		right.config_kD(PID_PRIMARY, d, kTimeoutMs);
+        // left.config_kF(PID_PRIMARY, f, kTimeoutMs);
+		// left.config_kP(PID_PRIMARY, p, kTimeoutMs);
+		// left.config_kI(PID_PRIMARY, i, kTimeoutMs);
+        // left.config_kD(PID_PRIMARY, d, kTimeoutMs);
+        // right.config_kF(PID_PRIMARY, f, kTimeoutMs);
+		// right.config_kP(PID_PRIMARY, p, kTimeoutMs);
+		// right.config_kI(PID_PRIMARY, i, kTimeoutMs);
+		// right.config_kD(PID_PRIMARY, d, kTimeoutMs);
     }
 
     /**
@@ -230,13 +230,13 @@ public class Drive extends DifferentialDrive{
         m_left_follower = new EncoderFollower(left_trajectory);
         m_right_follower = new EncoderFollower(right_trajectory);
 
-        m_left_follower.configureEncoder((int)left.getSelectedSensorPosition(), -113, 0.15);
+        m_left_follower.configureEncoder((int)left.getSelectedSensorPosition(), -29470, 0.15);
         // You must tune the PID values on the following line!
-        //m_left_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
+        m_left_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
-        m_right_follower.configureEncoder((int)right.getSelectedSensorPosition(), 113, 0.15);
+        m_right_follower.configureEncoder((int)right.getSelectedSensorPosition(), -29143, 0.15);
         // You must tune the PID values on the following line!
-        //m_right_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
+        m_right_follower.configurePIDVA(SmartDashboard.getNumber("P Const", 0), SmartDashboard.getNumber("I Const", 0), SmartDashboard.getNumber("D Const", 0), 1 / k_max_velocity, 0);
 
         m_follower_notifier = new Notifier(this::followPath);
         m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
@@ -259,7 +259,7 @@ public class Drive extends DifferentialDrive{
           double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
           double turn =  SmartDashboard.getNumber("Turn Const", 0.8) * (-1.0/80.0) * heading_difference;
           left.set((left_speed + turn));
-          right.set(-(right_speed - turn));
+          right.set((right_speed - turn));
         //   left.getPIDController().setReference(left_speed, ControlType.kPosition);
         //   right.getPIDController().setReference(right_speed, ControlType.kPosition);
 
@@ -288,16 +288,17 @@ public class Drive extends DifferentialDrive{
 
         this.reverse = reverse;
 
-        this.left.setInverted(reverse?!LEFT_SIDE_REVERSE:LEFT_SIDE_REVERSE);
+        // this.left.setInverted(reverse?!LEFT_SIDE_REVERSE:LEFT_SIDE_REVERSE);
 
-        this.right.setInverted(reverse?!RIGHT_SIDE_REVERSE:RIGHT_SIDE_REVERSE);
+        // this.right.setInverted(reverse?!RIGHT_SIDE_REVERSE:RIGHT_SIDE_REVERSE);
 
       }
 
       public void toggleReverse (){
-        this.left.setInverted(!this.left.getInverted());
+        // this.left.setInverted(!this.left.getInverted());
 
-        this.right.setInverted(!this.right.getInverted());
+        // this.right.setInverted(!this.right.getInverted());
+        this.reverse = !reverse;
       }
 
       /**
@@ -308,8 +309,16 @@ public class Drive extends DifferentialDrive{
           return this.reverse;
       }
 
+      public void arcadeDrive (double xSpeed, double zRotation){
+          super.arcadeDrive(getReverse()?-xSpeed:xSpeed, zRotation);
+      }
+
       public void toggleGearSpeed (){
           this.gearShifter.set(this.gearShifter.get() == Value.kForward?Value.kReverse:Value.kForward);
+      }
+
+      public Gyro getGyro(){
+          return this.gyro;
       }
 
 }

@@ -37,6 +37,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    SmartDashboard.putNumber("Left Back Climber Constant", 0);
+    SmartDashboard.putNumber("Right Back Climber Constant", 0);
+    SmartDashboard.putNumber("Left Front Climber Constant", 0);
+    SmartDashboard.putNumber("Right Front Climber Constant", 0);
+
+    SmartDashboard.putNumber("P Const", 0);
+    SmartDashboard.putNumber("I Const", 0);
+    SmartDashboard.putNumber("D Const", 0);
+    SmartDashboard.putNumber("Turn Const", 0.8);
+
     /**
      *  Begin capturing and sending images for the driver camera
      */
@@ -85,6 +95,10 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Autonomous Begins");
 
+    Drive.getInstance().reset();
+
+    Drive.getInstance().drivePath("FromCollectRightToSide5");
+
   }
 
   @Override
@@ -103,10 +117,14 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
+    Drive.getInstance().reset();
+
   }
 
   @Override
   public void teleopPeriodic() {
+
+    System.out.println(Drive.getInstance().getLeft().getSelectedSensorPosition() + "," + Drive.getInstance().getRight().getSelectedSensorPosition());
 
     /**
      * Run the scheduler
@@ -138,8 +156,54 @@ public class Robot extends TimedRobot {
       BackClimbers.getInstance().retract();
     }
     else{
-      FrontClimbers.getInstance().stop();
-      BackClimbers.getInstance().stop();
+
+      // Inidividual control
+
+      // Front left ( Left Bumper )
+      if ((!OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kLeft)){
+        FrontClimbers.getInstance().extendLeft();
+      }
+      else if ((OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kLeft)){
+        FrontClimbers.getInstance().retractLeft();
+      }
+      else{
+        FrontClimbers.getInstance().stopLeft();
+      }
+
+      // Front right ( Right Bumper )
+      if ((!OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kRight)){
+        FrontClimbers.getInstance().extendRight();
+      }
+      else if ((OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kRight)){
+        FrontClimbers.getInstance().retractRight();
+      }
+      else{
+        FrontClimbers.getInstance().stopRight();
+      }
+
+      // Back left (Left Trigger)
+      if ((!OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
+        BackClimbers.getInstance().extendLeft();
+      }
+      else if ((OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
+        BackClimbers.getInstance().retractLeft();
+      }
+      else{
+        BackClimbers.getInstance().stopLeft();
+      }
+
+      // Back right (Right Trigger)
+      if ((!OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kRight) > 0.2)){
+        BackClimbers.getInstance().extendRight();
+      }
+      else if ((OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kRight) > 0.2)){
+        BackClimbers.getInstance().retractRight();
+      }
+      else{
+        BackClimbers.getInstance().stopRight();
+      }
+
+
     }
 
     if (OI.getCoPilot().getBumper(Hand.kLeft)){
