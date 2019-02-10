@@ -108,8 +108,9 @@ public class Robot extends TimedRobot {
      */
     Drive.getInstance().reset();
 
-    // If auto command is not null, start it
+    // If auto command is not null
     if (autoCommand != null){
+      // Start the auto command
       autoCommand.start();
     }
 
@@ -136,7 +137,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println(Drive.getInstance().getLeft().getSelectedSensorPosition() + "," + Drive.getInstance().getRight().getSelectedSensorPosition());
+    // System.out.println(Drive.getInstance().getLeft().getSelectedSensorPosition() + "," + Drive.getInstance().getRight().getSelectedSensorPosition());
 
     /**
      * Run the scheduler

@@ -1,32 +1,17 @@
 package frc.robot.constants;
 
 import frc.robot.oi.AxisConfiguration;
-import frc.robot.oi.POVDirection;
+import frc.robot.oi.ButtonConfiguration;
 
 public class OIConstants {
 
 	// /* Pilot */
 
 	/**
-	 * When pressed, allows for NORTH/SOUTH to control the front climbers 
+	 * The control for toggling gear speed
 	 */
-	public static final POVDirection FRONT_CLIMBERS_A = POVDirection.WEST;
+	public static final ButtonConfiguration TOGGLE_GEAR_SPEED = ButtonConfiguration.kStickLeft;
 
-	/**
-	 * When pressed, allows for NORTH/SOUTH to control the back climbers 
-	 */
-	public static final POVDirection BACK_CLIMBERS_A = POVDirection.EAST;
-
-	/**
-	 * When pressed, retracts the climbers elected using FRONT_CLIMBERS_A or BACK_CLIMBERS_A
-	 */
-	public static final POVDirection RETRACT_CLIMBERS_B = POVDirection.NORTH;
-
-	/**
-	 * When pressed, extends the climbers elected using FRONT_CLIMBERS_A or BACK_CLIMBERS_A
-	 */
-	public static final POVDirection EXTEND_CLIMBERS_B = POVDirection.SOUTH;
-	
 	/**
 	 * The control for turning the drive system
 	 */
@@ -38,6 +23,8 @@ public class OIConstants {
 	public static final AxisConfiguration DRIVE_MAGNITUDE = AxisConfiguration.LEFT_Y;
 	
 	// /* Copilot */
+
+	public static final ButtonConfiguration TOGGLE_REVERSE = ButtonConfiguration.kB;
 	
 	// public static final ButtonConfiguration RETRACT_FORK = ButtonConfiguration.kB;
 	// public static final ButtonConfiguration EXTEND_FORK = ButtonConfiguration.kA;

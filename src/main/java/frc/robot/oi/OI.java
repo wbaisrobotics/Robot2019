@@ -5,7 +5,11 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
+import frc.robot.commands.ToggleGearSpeed;
+import frc.robot.commands.ToggleReverse;
 import frc.robot.util.Cantor;
+
+import frc.robot.constants.OIConstants;
 
 /**
  * Connection between controllers and commands on the robot
@@ -44,21 +48,21 @@ public class OI {
 	
 	private static Map <Integer, Button> buttons = new HashMap <Integer, Button>();
 	
-	// private static Button getButton (Controllers controller, ButtonConfiguration config){
-	// 	int index = Cantor.getIndex(controller.getPort(), ButtonType.BUTTON.ordinal(), config.getPort());
-	// 	if (!buttons.containsKey(index)) {
-	// 		buttons.put(index, new JoystickButton (getController (controller), config));
-	// 	}
-	// 	return buttons.get(index);
-	// }
-	
-	private static Button getButton (Controllers controller, POVDirection config){
-		int index = Cantor.getIndex(controller.getPort(), ButtonType.POV.ordinal(), config.getAngle());
+	private static Button getButton (Controllers controller, ButtonConfiguration config){
+		int index = Cantor.getIndex(controller.getPort(), ButtonType.BUTTON.ordinal(), config.getPort());
 		if (!buttons.containsKey(index)) {
-			buttons.put(index, new POVButton (getController (controller), config));
+			buttons.put(index, new JoystickButton (getController (controller), config));
 		}
 		return buttons.get(index);
 	}
+	
+	// private static Button getButton (Controllers controller, POVDirection config){
+	// 	int index = Cantor.getIndex(controller.getPort(), ButtonType.POV.ordinal(), config.getAngle());
+	// 	if (!buttons.containsKey(index)) {
+	// 		buttons.put(index, new POVButton (getController (controller), config));
+	// 	}
+	// 	return buttons.get(index);
+	// }
 	
 	// private static Button getButton (Controllers controller, AxisConfiguration config, double low, double high){
 	// 	int index = Cantor.getIndex(controller.getPort(), ButtonType.AXIS.ordinal(), config.getRawAxis());
@@ -68,9 +72,9 @@ public class OI {
 	// 	return buttons.get(index);
 	// }
 	
-	private static Button getButton (Button... buttons) {
-		return new ButtonCollection (buttons);
-	}
+	// private static Button getButton (Button... buttons) {
+	// 	return new ButtonCollection (buttons);
+	// }
 
 	public static XboxController getPilot(){
 		return getController(Controllers.PILOT);
@@ -85,7 +89,11 @@ public class OI {
 	 */
 	public static void initButtons () {
 
+		// Initializes the stick button for toggling gear speed
+		getButton(Controllers.PILOT, OIConstants.TOGGLE_GEAR_SPEED).whenPressed(new ToggleGearSpeed());
 
+		// Initializes the b button for toggling reverse
+		getButton(Controllers.PILOT, OIConstants.TOGGLE_REVERSE).whenPressed(new ToggleReverse());
 	
 	}
 
