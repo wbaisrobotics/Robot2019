@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import frc.robot.commands.JoystickDrive;
+
 /**
  * Represents the drive class of the robot
  */
@@ -289,7 +291,8 @@ public class Drive extends Subsystem{
        * Initializes the joystick command
        */
       public void initDefaultCommand (){
-
+        // Set the default command to JoystickDrive
+        super.setDefaultCommand(new JoystickDrive());
       }
 
 }
