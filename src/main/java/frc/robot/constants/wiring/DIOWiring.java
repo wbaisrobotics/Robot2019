@@ -16,6 +16,8 @@ public enum DIOWiring {
     BACK_CLIMBER_RIGHT_RETRACTED (7),
     BACK_CLIMBER_RIGHT_EXTENDED (3),
 
+    DRIVE_INDICATOR_LIGHT (8),
+
     ;
 
     /** The stored port **/

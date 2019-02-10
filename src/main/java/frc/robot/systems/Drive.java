@@ -11,10 +11,11 @@ import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.MotionProfilingConstants;
 import frc.robot.constants.wiring.CANWiring;
+import frc.robot.constants.wiring.DIOWiring;
 import frc.robot.constants.wiring.PCMWiring;
 import frc.robot.util.Logger;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -70,8 +71,11 @@ public class Drive extends Subsystem{
             // Add gyro to IO Dashboard
             NetworkTableCommunicator.setIoDashboardValue("Gyro", gyro);
 
+            // Initialize the reverse indicator light
+            DigitalOutput indicatorLight = new DigitalOutput (DIOWiring.DRIVE_INDICATOR_LIGHT.getPort());
+
             // Create the instance
-            instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, gyro);
+            instance = new Drive(left1, left2, left3, right1, right2, right3, gearShifter, gyro, indicatorLight);
 
         }
         return instance;
@@ -102,11 +106,16 @@ public class Drive extends Subsystem{
     private boolean reverse = false;
 
     /**
+     * The indicator light displaying which side is in reverse
+     */
+    private DigitalOutput indicatorLight;
+
+    /**
      * Default constructor for just the motors and no encoders
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro){
+    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
 
         // Call DifferentialDrive with the controllers
         drive = new DifferentialDrive (left1, right1);
@@ -119,6 +128,9 @@ public class Drive extends Subsystem{
 
         // Save the gear shifter
         this.gearShifter = gearShifter;
+
+        // Save the indicator light
+        this.indicatorLight = indicatorLight;
 
         //// Talon configurations
 
@@ -224,7 +236,7 @@ public class Drive extends Subsystem{
         this.reverse = reverse;
 
         // Update the indicator LEDs
-        // TBD
+        indicatorLight.set(reverse);
 
       }
 
