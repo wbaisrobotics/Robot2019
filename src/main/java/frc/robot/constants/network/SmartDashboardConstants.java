@@ -15,7 +15,7 @@ public enum SmartDashboardConstants{
     P_CONST ("P Const", NetworkTableValue.makeDouble (0.0)),
     I_CONST ("I Const", NetworkTableValue.makeDouble (0.0)),
     D_CONST ("D Const", NetworkTableValue.makeDouble (0.0)),
-    TURN_CONST ("Turn Const", NetworkTableValue.makeDouble (0.0)),
+    F_CONST ("F Const", NetworkTableValue.makeDouble (0.0)),
 
     /**
      * Climber constants

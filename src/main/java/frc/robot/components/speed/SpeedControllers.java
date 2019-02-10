@@ -1,12 +1,12 @@
 package frc.robot.components.speed;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Victor;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.PWMWiring;
@@ -41,6 +41,8 @@ public class SpeedControllers{
         WPI_TalonSRX controller = new WPI_TalonSRX(port.getPort());
         // Log the creation
         Logger.log("WPI_TalonSRX Initialzied with CAN ID: " + controller.getDeviceID() + " for " + port.toString());
+        // Reset the controller
+        controller.configFactoryDefault();
         // Add to smart dashboard
         NetworkTableCommunicator.setMotorDashboardValue(port.toString(), controller);
         // Return the controller
