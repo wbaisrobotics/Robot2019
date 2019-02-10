@@ -39,9 +39,34 @@ public class MotionProfilingConstants{
      */
     public static final double kMaxVelocity = 2.4;
 
+    /**
+     * The proportional constant for the controllers
+     */
     public static double kP = 0;
+    /**
+     * The integral constant for the controllers
+     */
     public static double kI = 0;
+    /**
+     * The derivative constant for the controllers
+     */
     public static double kD = 0;
-    public static double kF = 0;
+    /**
+     * The velocity constant for the controllers
+     */
+    public static double kV = 1/kMaxVelocity;
+    /**
+     * The acceleration constant for the controllers
+     */
+    public static double kA = 0;
+    /**
+     * The turn constant for the controllers
+     */
+    public static double kTurn = 0;
+
+    /**
+     * Each profile lasts 20ms
+     */
+    public static final int kMotionProfileLength = 20;
 
 }

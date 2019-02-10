@@ -3,6 +3,8 @@ package frc.robot.constants.network;
 
 import edu.wpi.first.networktables.NetworkTableValue;
 
+import frc.robot.constants.MotionProfilingConstants;
+
 /**
  * The key constants for Smart Dashboard communication
  * All values here will be have their default values sent to the dashboard upon program start
@@ -12,11 +14,13 @@ public enum SmartDashboardConstants{
     /**
      * Motion profiling PID constants
      */
-    P_CONST ("P Const", NetworkTableValue.makeDouble (0.0)),
-    I_CONST ("I Const", NetworkTableValue.makeDouble (0.0)),
-    D_CONST ("D Const", NetworkTableValue.makeDouble (0.0)),
-    F_CONST ("F Const", NetworkTableValue.makeDouble (0.0)),
-
+    P_CONST ("P Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kP)),
+    I_CONST ("I Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kI)),
+    D_CONST ("D Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kD)),
+    V_CONST ("V Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kV)),
+    A_CONST ("A Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kA)),
+    TURN_CONST ("Turn Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kTurn)),
+    
     /**
      * Climber constants
      */

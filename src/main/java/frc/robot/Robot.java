@@ -9,8 +9,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.oi.OI;
 import frc.robot.systems.BackClimbers;
@@ -31,6 +33,11 @@ import edu.wpi.first.cameraserver.CameraServer;
  * project.
  */
 public class Robot extends TimedRobot {
+
+  /**
+   * The command to be run during auto
+   */
+  private Command autoCommand;
 
   /**
    * Initializes the robot and its systems
@@ -79,6 +86,11 @@ public class Robot extends TimedRobot {
     HatchManipulator.getInstance();
 
     /**
+     * Initialize the auto command
+     */
+    autoCommand = new DriveMotionProfile("FromCollectRightToSide5");
+
+    /**
      * Initializes the OI
      */
     //OI.initButtons();
@@ -91,9 +103,15 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Autonomous Begins");
 
+    /**
+     * Reset the drive encoders
+     */
     Drive.getInstance().reset();
 
-    Drive.getInstance().drivePath("FromCollectRightToSide5");
+    // If auto command is not null, start it
+    if (autoCommand != null){
+      autoCommand.start();
+    }
 
   }
 
@@ -112,8 +130,6 @@ public class Robot extends TimedRobot {
 
     // Log the init
     Logger.log("Teleoperation Begins");
-
-    Drive.getInstance().reset();
 
   }
 
