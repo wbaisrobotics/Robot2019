@@ -5,13 +5,6 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.climbing.ExtendBackClimbers;
-import frc.robot.commands.climbing.ExtendFrontClimbers;
-import frc.robot.commands.climbing.RetractBackClimbers;
-import frc.robot.commands.climbing.RetractFrontClimbers;
-import frc.robot.constants.OIConstants;
 import frc.robot.util.Cantor;
 
 /**
@@ -92,27 +85,7 @@ public class OI {
 	 */
 	public static void initButtons () {
 
-		/* --- Pilot --- */
 
-		// Initialize the command for extending the back climbers
-		Command extendBackClimbers = new ExtendBackClimbers();
-		getButton (getButton (Controllers.PILOT, OIConstants.BACK_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.EXTEND_CLIMBERS_B)).whileHeld(extendBackClimbers);
-		SmartDashboard.putData (extendBackClimbers);
-
-		// Initialize the command for retracting the back climbers
-		Command retractBackClimbers = new RetractBackClimbers();
-		getButton (getButton (Controllers.PILOT, OIConstants.BACK_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.RETRACT_CLIMBERS_B)).whileHeld(retractBackClimbers);
-		SmartDashboard.putData (retractBackClimbers);
-
-		// Initialize the command for extending the front climbers
-		Command extendFrontClimbers = new ExtendFrontClimbers();
-		getButton (getButton (Controllers.PILOT, OIConstants.FRONT_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.EXTEND_CLIMBERS_B)).whileHeld(extendFrontClimbers);
-		SmartDashboard.putData (extendFrontClimbers);
-
-		// Initialize the command for retracting the front climbers
-		Command retractFrontClimbers = new RetractFrontClimbers();
-		getButton (getButton (Controllers.PILOT, OIConstants.FRONT_CLIMBERS_A), getButton(Controllers.PILOT, OIConstants.RETRACT_CLIMBERS_B)).whileHeld(retractFrontClimbers);
-		SmartDashboard.putData (retractFrontClimbers);
 	
 	}
 

@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     /**
      * Initializes the OI
      */
-    //OI.initButtons();
+    OI.initButtons();
 
   }
 
@@ -141,18 +141,18 @@ public class Robot extends TimedRobot {
     /**
      * Run the scheduler
      */
-    // Scheduler.getInstance().run();
+    Scheduler.getInstance().run();
 
-    if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
-      Drive.getInstance().toggleGearSpeed();
-    }
+    // if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+    //   Drive.getInstance().toggleGearSpeed();
+    // }
 
-    if (OI.getCoPilot().getBButtonPressed()){
-      Drive.getInstance().toggleReverse();
-      //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
-    }
+    // if (OI.getCoPilot().getBButtonPressed()){
+    //   Drive.getInstance().toggleReverse();
+    //   //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
+    // }
 
-    Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
+    // Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
 
     SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
     SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
