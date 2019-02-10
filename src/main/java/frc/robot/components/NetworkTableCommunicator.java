@@ -62,7 +62,7 @@ public class NetworkTableCommunicator{
      * @param loc - the referenced entry
      * @param value - the value to set it to
      */
-    public static void set (SmartDashboardConstants loc, NetworkTableValue value){
+    public static void set (SmartDashboardConstants loc, Object value){
         // Get the entry at loc and set the value
         smartDashboard.getEntry(loc.getKey()).setValue(value);
     }
@@ -101,7 +101,7 @@ public class NetworkTableCommunicator{
      * @param loc - the referenced entry
      * @param value - the value to set it to
      */
-    public static void setMotorDashboardValue (String loc, NetworkTableValue value){
+    public static void setMotorDashboardValue (String loc, Object value){
         // Get the entry at loc and set the value
         motorDashboard.getEntry(loc).setValue(value);
     }
@@ -140,7 +140,7 @@ public class NetworkTableCommunicator{
      * @param loc - the referenced entry
      * @param value - the value to set it to
      */
-    public static void setSolenoidDashboardValue (String loc, NetworkTableValue value){
+    public static void setSolenoidDashboardValue (String loc, Object value){
         // Get the entry at loc and set the value
         solenoidDashboard.getEntry(loc).setValue(value);
     }
@@ -179,7 +179,7 @@ public class NetworkTableCommunicator{
      * @param loc - the referenced entry
      * @param value - the value to set it to
      */
-    public static void setIoDashboardValue (String loc, NetworkTableValue value){
+    public static void setIoDashboardValue (String loc, Object value){
         // Get the entry at loc and set the value
         ioDashboard.getEntry(loc).setValue(value);
     }
