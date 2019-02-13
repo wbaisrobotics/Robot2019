@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.MotionProfilingConstants;
@@ -71,7 +72,8 @@ public class Drive extends Subsystem{
             // Initialize the gyro
             ADXRS450_Gyro gyro = new ADXRS450_Gyro();
             // Add gyro to IO Dashboard
-            NetworkTableCommunicator.setIoDashboardValue("Gyro", gyro);
+            SmartDashboard.putData(gyro);
+            //NetworkTableCommunicator.setIoDashboardValue("Gyro", gyro);
 
             // Initialize the reverse indicator light
             DigitalOutput indicatorLight = new DigitalOutput (DIOWiring.DRIVE_INDICATOR_LIGHT.getPort());
