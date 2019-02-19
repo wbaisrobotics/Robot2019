@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.oi.OI;
+import frc.robot.oi.POVDirection;
 import frc.robot.systems.BackClimbers;
 import frc.robot.systems.BallManipulator;
 import frc.robot.systems.DeathCrawler;
@@ -96,13 +97,7 @@ public class Robot extends TimedRobot {
   }
 
   public DriveMotionProfile getAutoCommand (){
-    try {
-      return new DriveMotionProfile("FromCenterToSide4");
-    }
-    catch (Throwable e){
-      System.out.println(e.getMessage());
-      return getAutoCommand();
-    }
+    return new DriveMotionProfile("FromCenterToSide4");
   }
 
   @Override
@@ -119,7 +114,7 @@ public class Robot extends TimedRobot {
     // If auto command is not null
     if (autoCommand != null){
       // Start the auto command
-      autoCommand.start();
+      // autoCommand.start();
     }
 
   }
@@ -130,7 +125,8 @@ public class Robot extends TimedRobot {
     /**
      * Run the scheduler
      */
-    Scheduler.getInstance().run();
+    // Scheduler.getInstance().run();
+    teleopPeriodic();
   
   }
 
@@ -149,7 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    // System.out.println(Drive.getInstance().getLeft().getSelectedSensorPosition() + "," + Drive.getInstance().getRight().getSelectedSensorPosition());
+    System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
 
     /**
      * Run the scheduler
@@ -243,7 +239,18 @@ public class Robot extends TimedRobot {
     }
     else{
 
-      Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
+      if (OI.getCoPilot().getPOV() == POVDirection.NORTH.getAngle()){
+        BallManipulator.getInstance().lowerBall();
+      }
+      if (OI.getCoPilot().getPOV() == POVDirection.SOUTH.getAngle()){
+        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+      }
+      else{
+        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+      }
+      
+
+      Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
 
       if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
         Drive.getInstance().toggleGearSpeed();
@@ -281,8 +288,7 @@ public class Robot extends TimedRobot {
         HatchManipulator.getInstance().shooterIn();
       }
 
-      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
-
+      
       DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
 
     } 
@@ -298,6 +304,8 @@ public class Robot extends TimedRobot {
   }
 
   public void disabledInit (){
+
+    Drive.getInstance().reset();
       /**
      * Initialize the auto command
      */

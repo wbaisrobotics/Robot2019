@@ -147,6 +147,9 @@ public class Drive extends Subsystem{
      */
     public void reset (){
 
+        // Stop all motors
+        stop();
+
         // Reset the gyro
         gyro.reset();
 
