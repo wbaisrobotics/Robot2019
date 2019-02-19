@@ -9,6 +9,7 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.wiring.PCMWiring;
 
 /**
@@ -34,8 +35,10 @@ public class HatchManipulator extends Subsystem {
 
       // Initialize the solenoids
       DoubleSolenoid thunker = new DoubleSolenoid (PCMWiring.HIN_A.getPort(), PCMWiring.HIN_B.getPort());
+      SmartDashboard.putData(thunker);
       DoubleSolenoid shooter = new DoubleSolenoid (PCMWiring.HOT_A.getPort(), PCMWiring.HOT_B.getPort());
-            
+      SmartDashboard.putData(shooter);
+
       // Initialize the instance
       instance = new HatchManipulator(thunker, shooter);
 

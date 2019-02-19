@@ -15,12 +15,12 @@ public class BallManipulator{
     /**
      * The speed for lifting a ball in the elevator
      */
-    public final double ELEVATOR_UP_SPEED = 0.5;
+    public final double ELEVATOR_UP_SPEED = 1.0;
 
     /**
      * The speed for lowering a ball in the elevator
      */
-    public final double ELEVATOR_DOWN_SPEED = -0.5;
+    public final double ELEVATOR_DOWN_SPEED = -1.0;
 
     /**
      * The speed for shooting a ball out in the shooter
@@ -47,10 +47,10 @@ public class BallManipulator{
             // then initialize:
 
             // Initialize the elevator motor
-            SpeedController elevatorMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.BALL_ELEVATOR);
+            SpeedController elevatorMotor = SpeedControllers.getVictorSPX(CANWiring.BALL_ELEVATOR);
 
             // Initialize the shooter motor
-            SpeedController shooterMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.BALL_SHOOTER);
+            SpeedController shooterMotor = SpeedControllers.getVictorSPX(CANWiring.BALL_SHOOTER);
             
             // Initialize the instance
             instance = new BallManipulator(elevatorMotor, shooterMotor);

@@ -10,7 +10,6 @@ import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
-import frc.robot.constants.wiring.PWMWiring;
 
 /**
  * The climbers in the front of the robot used to create an angle for climbing lvl 2/3
@@ -39,7 +38,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the left side
             // Initialize the left motor 
-            SpeedController leftMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.CLIMBER_FRONT_LEFT);
+            SpeedController leftMotor = SpeedControllers.getTalonSRX(CANWiring.CLIMBER_FRONT_LEFT);
             // Initialize the left retracted switch
             LimitSwitch leftRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(leftRetractedSwitch);
@@ -49,7 +48,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the right side
             // Initialize the right motor 
-            SpeedController rightMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.CLIMBER_FRONT_RIGHT);
+            SpeedController rightMotor = SpeedControllers.getTalonSRX(CANWiring.CLIMBER_FRONT_RIGHT);
             // Initialize the right retracted switch
             LimitSwitch rightRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(rightRetractedSwitch);

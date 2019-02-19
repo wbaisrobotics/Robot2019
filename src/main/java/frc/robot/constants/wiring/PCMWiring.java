@@ -7,14 +7,14 @@ package frc.robot.constants.wiring;
 public enum PCMWiring {
 
     // The different solenoids and their cooresponding PCM port(s)
-    HIN_A (0),
-    HIN_B(7),
+    HIN_A (2),
+    HIN_B(5),
 
     HOT_A (1),
     HOT_B(6),
 
-    G_A (2),
-    G_B(5);
+    G_A (0),
+    G_B(7);
 
     /** The stored port **/
     private int m_port;

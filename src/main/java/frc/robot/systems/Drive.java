@@ -70,6 +70,8 @@ public class Drive extends Subsystem{
 
             // Initialize the gear shifter
             DoubleSolenoid gearShifter = new DoubleSolenoid (PCMWiring.G_A.getPort(), PCMWiring.G_B.getPort());
+            SmartDashboard.putData(gearShifter);
+
 
             // Initialize the gyro
             ADXRS450_Gyro gyro = new ADXRS450_Gyro();

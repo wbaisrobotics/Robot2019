@@ -29,7 +29,7 @@ public class DeathCrawler{
             // then initialize:
 
             // Initialize the worm arm motor
-            SpeedController armMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.DEATH_CRAWLER_ARM);
+            SpeedController armMotor = SpeedControllers.getTalonSRX(CANWiring.DEATH_CRAWLER_ARM);
 
             // Initialize the death crawler motor
             CANSparkMax deathCrawlMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.DEATH_CRAWLER);
@@ -64,11 +64,13 @@ public class DeathCrawler{
     }
 
     public void setWormSpeed (double speed){
-        if (speed > 0){
-            this.wormArmMotor.set(speed * 0.4);
+        // Going up
+        if (speed < 0){
+            this.wormArmMotor.set(speed * 1.0);
         }
+        // Going down
         else{
-            this.wormArmMotor.set(speed * 0.75);
+            this.wormArmMotor.set(speed * 0.4);
         }
         
     }
