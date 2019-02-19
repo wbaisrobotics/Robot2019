@@ -29,7 +29,7 @@ public class DeathCrawler{
             // then initialize:
 
             // Initialize the worm arm motor
-            SpeedController armMotor = SpeedControllers.getVictor(PWMWiring.DEATH_CRAWLER_ARM);
+            SpeedController armMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.DEATH_CRAWLER_ARM);
 
             // Initialize the death crawler motor
             CANSparkMax deathCrawlMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.DEATH_CRAWLER);

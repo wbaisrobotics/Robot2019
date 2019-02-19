@@ -8,6 +8,7 @@ import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
+import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
 import frc.robot.constants.wiring.PWMWiring;
 
@@ -38,7 +39,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the left side
             // Initialize the left motor 
-            SpeedController leftMotor = SpeedControllers.getVictor(PWMWiring.CLIMBER_FRONT_LEFT);
+            SpeedController leftMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.CLIMBER_FRONT_LEFT);
             // Initialize the left retracted switch
             LimitSwitch leftRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_LEFT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(leftRetractedSwitch);
@@ -48,7 +49,7 @@ public class FrontClimbers extends Subsystem{
 
             //// Initialize the right side
             // Initialize the right motor 
-            SpeedController rightMotor = SpeedControllers.getVictor(PWMWiring.CLIMBER_FRONT_RIGHT);
+            SpeedController rightMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.CLIMBER_FRONT_RIGHT);
             // Initialize the right retracted switch
             LimitSwitch rightRetractedSwitch = new LimitSwitch(DIOWiring.FRONT_CLIMBER_RIGHT_RETRACTED, SwitchConfiguration.NC, WiringConfiguration.S_GND);
             SmartDashboard.putData(rightRetractedSwitch);

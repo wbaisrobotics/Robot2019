@@ -2,6 +2,7 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import frc.robot.components.speed.SpeedControllers;
+import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.PWMWiring;
 
 /**
@@ -46,10 +47,10 @@ public class BallManipulator{
             // then initialize:
 
             // Initialize the elevator motor
-            SpeedController elevatorMotor = SpeedControllers.getVictor(PWMWiring.BALL_ELEVATOR);
+            SpeedController elevatorMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.BALL_ELEVATOR);
 
             // Initialize the shooter motor
-            SpeedController shooterMotor = SpeedControllers.getVictor(PWMWiring.BALL_SHOOTER);
+            SpeedController shooterMotor = SpeedControllers.getSparkMaxBrushless(CANWiring.BALL_SHOOTER);
             
             // Initialize the instance
             instance = new BallManipulator(elevatorMotor, shooterMotor);

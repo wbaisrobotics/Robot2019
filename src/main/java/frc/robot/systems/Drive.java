@@ -4,6 +4,7 @@ package frc.robot.systems;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -56,16 +57,16 @@ public class Drive extends Subsystem{
             // Initialize the Talon SRXs
 
             // Initialize the left master
-            WPI_TalonSRX left1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_1);
+            CANSparkMax left1 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_1);
             // Initialize the left slaves
-            WPI_TalonSRX left2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_2);
-            WPI_TalonSRX left3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_3);
+            CANSparkMax left2 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_2);
+            CANSparkMax left3 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_3);
 
             // Initialize the right master
-            WPI_TalonSRX right1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_1);
+            CANSparkMax right1 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_1);
             // Initialize the left slaves
-            WPI_TalonSRX right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
-            WPI_TalonSRX right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
+            CANSparkMax right2 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_2);
+            CANSparkMax right3 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_3);
 
             // Initialize the gear shifter
             DoubleSolenoid gearShifter = new DoubleSolenoid (PCMWiring.G_A.getPort(), PCMWiring.G_B.getPort());
@@ -73,7 +74,6 @@ public class Drive extends Subsystem{
             // Initialize the gyro
             ADXRS450_Gyro gyro = new ADXRS450_Gyro();
             // Add gyro to IO Dashboard
-            System.out.println("HI");
             SmartDashboard.putData(gyro);
             //NetworkTableCommunicator.setIoDashboardValue("Gyro", gyro);
 
@@ -90,11 +90,11 @@ public class Drive extends Subsystem{
     /**
      * The left master
      */
-    private WPI_TalonSRX left;
+    private CANSparkMax left;
     /**
      * The right master
      */
-    private WPI_TalonSRX right;
+    private CANSparkMax right;
 
     /**
      * The gear shifter
@@ -121,7 +121,7 @@ public class Drive extends Subsystem{
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
+    public Drive (CANSparkMax left1, CANSparkMax left2, CANSparkMax left3, CANSparkMax right1, CANSparkMax right2, CANSparkMax right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
 
         // Call DifferentialDrive with the controllers
         drive = new DifferentialDrive (new SpeedControllerGroup(left1, left2, left3), new SpeedControllerGroup(right1, right2, right3));
@@ -138,56 +138,6 @@ public class Drive extends Subsystem{
         // Save the indicator light
         this.indicatorLight = indicatorLight;
 
-        //// Talon configurations
-
-        // Set the inverted settings for the masters
-        left1.setInverted(LEFT_SIDE_REVERSE);
-        left2.setInverted(LEFT_SIDE_REVERSE);
-        left3.setInverted(LEFT_SIDE_REVERSE);
-        right1.setInverted(RIGHT_SIDE_REVERSE); 
-        right2.setInverted(RIGHT_SIDE_REVERSE); 
-        right3.setInverted(RIGHT_SIDE_REVERSE); 
-
-        // Configure the other talons to follow
-        // left2.follow(left1);
-        // left3.follow(left1);
-        // right2.follow(right1);
-        // right3.follow(right1);
-
-        // Configure the other talons to invert
-        // left2.setInverted(InvertType.FollowMaster);
-        // left3.setInverted(InvertType.FollowMaster);
-        // right2.setInverted(InvertType.FollowMaster);
-        // right3.setInverted(InvertType.FollowMaster);
-
-        // Set frame update to every 1ms for left
-        left.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotionProfilingConstants.kMotionProfileLength);
-        // Set frame update to every 1ms for right
-        right.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotionProfilingConstants.kMotionProfileLength);
-
-        // Config the sensor coefficient for left
-        left.configSelectedFeedbackCoefficient(1/MotionProfilingConstants.kTicksPerMeterLeft);
-        // Invert the left sensor
-        left.setSensorPhase(false);
-        // Config the sensor coefficient for right
-        right.configSelectedFeedbackCoefficient(1/MotionProfilingConstants.kTicksPerMeterRight);
-        // Invert the right sensor
-        right.setSensorPhase(false);
-
-        // Stop the WPILib class from inverting the right side
-        drive.setRightSideInverted(false);
-
-        /* Config the peak and nominal outputs, 12V means full */
-		left.configNominalOutputForward(0, MotionProfilingConstants.kTimeoutMs);
-		left.configNominalOutputReverse(0, MotionProfilingConstants.kTimeoutMs);
-		left.configPeakOutputForward(1, MotionProfilingConstants.kTimeoutMs);
-		left.configPeakOutputReverse(-1, MotionProfilingConstants.kTimeoutMs);
-        
-        /* Config the peak and nominal outputs, 12V means full */
-		right.configNominalOutputForward(0, MotionProfilingConstants.kTimeoutMs);
-		right.configNominalOutputReverse(0, MotionProfilingConstants.kTimeoutMs);
-		right.configPeakOutputForward(1, MotionProfilingConstants.kTimeoutMs);
-		right.configPeakOutputReverse(-1, MotionProfilingConstants.kTimeoutMs);
     }
 
     /**
@@ -199,8 +149,8 @@ public class Drive extends Subsystem{
         gyro.reset();
 
         // Reset the encoders
-        left.getSensorCollection().setQuadraturePosition(0, 30);
-        right.getSensorCollection().setQuadraturePosition(0, 30);
+        left.getEncoder().setPosition(0);
+        right.getEncoder().setPosition(0);
 
         // Log the reset
         Logger.log("[Quadrature Encoders] All sensors are zeroed.");
@@ -221,7 +171,7 @@ public class Drive extends Subsystem{
        * Returns the left master
        * @return the left master controller
        */
-      public WPI_TalonSRX getLeft(){
+      public CANSparkMax getLeft(){
         return this.left;
       }
 
@@ -229,7 +179,7 @@ public class Drive extends Subsystem{
        * Returns the right master
        * @return the right master controller
        */
-      public WPI_TalonSRX getRight(){
+      public CANSparkMax getRight(){
         return this.right;
       }
 

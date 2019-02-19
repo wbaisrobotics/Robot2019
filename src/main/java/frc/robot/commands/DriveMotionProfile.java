@@ -58,8 +58,8 @@ public class DriveMotionProfile extends Command {
     requires (Drive.getInstance());
 
     // Read the trajectories
-    leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
-    rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
+    // leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
+    // rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
 
     // Initialize the encoder followers
     m_left_follower = new EncoderFollower(leftTrajectory);
@@ -73,9 +73,9 @@ public class DriveMotionProfile extends Command {
   protected void initialize() {
 
     // Configure the left encoder's starting position
-    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
-    // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterRight);
+    // m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
+    // // Configure the right encoder's starting position
+    // m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
@@ -141,27 +141,27 @@ public class DriveMotionProfile extends Command {
       long startTime = System.currentTimeMillis();
 
       // Calculate the speeds of each side based on the encoder locations
-      double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
-      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
-      // Calculate the gyro angle's effect
-      double heading = Drive.getInstance().getGyro().getAngle();
-      double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-      double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  MotionProfilingConstants.kTurn  * (-1.0/80.0) * heading_difference;
+      // double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+      // double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+      // // Calculate the gyro angle's effect
+      // double heading = Drive.getInstance().getGyro().getAngle();
+      // double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+      // double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+      // double turn =  MotionProfilingConstants.kTurn  * (-1.0/80.0) * heading_difference;
 
-      // System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
-      // System.out.println("Left: " + (left_speed + turn) + ", Right: " + (right_speed - turn));
+      // // System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
+      // // System.out.println("Left: " + (left_speed + turn) + ", Right: " + (right_speed - turn));
 
-      SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
-      SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
+      // SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
+      // SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
 
 
-      // Set the speeds to the motors
-      Drive.getInstance().tankDrive((left_speed + turn), (right_speed - turn));
+      // // Set the speeds to the motors
+      // Drive.getInstance().tankDrive((left_speed + turn), (right_speed - turn));
 
-      // Log the current status every n times
-      Logger.logEvery("Drive Motion Profile Status: Left Error: " + m_left_follower.lastError
-       + ", Right Error: " + m_right_follower.lastError + "-" + ", Gyro Error: " + heading_difference + " (" + heading + ")" + ", Total Calculation Time: " + (System.currentTimeMillis() - startTime), 1, this);
+      // // Log the current status every n times
+      // Logger.logEvery("Drive Motion Profile Status: Left Error: " + m_left_follower.lastError
+      //  + ", Right Error: " + m_right_follower.lastError + "-" + ", Gyro Error: " + heading_difference + " (" + heading + ")" + ", Total Calculation Time: " + (System.currentTimeMillis() - startTime), 1, this);
 
     }
   }

@@ -162,8 +162,8 @@ public class Robot extends TimedRobot {
 
     Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
 
-    SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
-    SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
+    SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
+    SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getEncoder().getPosition());
 
     if (OI.getPilot().getAButton()){
       FrontClimbers.getInstance().extend();
