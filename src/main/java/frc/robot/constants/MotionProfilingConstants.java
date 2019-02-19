@@ -32,7 +32,7 @@ public class MotionProfilingConstants{
     /**
      * The numbers of ticks per meter for right
      */
-    public static final int kTicksPerMeterRight = 61874;
+    public static final int kTicksPerMeterRight = 61874; 
 
     /**
      * The max velocity in m/s

@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
@@ -37,7 +36,7 @@ public class Robot extends TimedRobot {
   /**
    * The command to be run during auto
    */
-  private Command autoCommand;
+  private DriveMotionProfile autoCommand;
 
   /**
    * Initializes the robot and its systems
@@ -88,13 +87,22 @@ public class Robot extends TimedRobot {
     /**
      * Initialize the auto command
      */
-    autoCommand = new DriveMotionProfile("FromCollectRightToSide5");
-
+    autoCommand = getAutoCommand();
     /**
      * Initializes the OI
      */
-    OI.initButtons();
+    //OI.initButtons();
 
+  }
+
+  public DriveMotionProfile getAutoCommand (){
+    try {
+      return new DriveMotionProfile("FromCenterToSide4");
+    }
+    catch (Throwable e){
+      System.out.println(e.getMessage());
+      return getAutoCommand();
+    }
   }
 
   @Override
@@ -150,7 +158,6 @@ public class Robot extends TimedRobot {
 
     if (OI.getCoPilot().getBButtonPressed()){
       Drive.getInstance().toggleReverse();
-      //Drive.getInstance().setReverse(Drive.getInstance().getReverse());
     }
 
     Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
@@ -259,6 +266,16 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
+  }
+
+  public void disabledInit (){
+      /**
+     * Initialize the auto command
+     */
+    // autoCommand = getAutoCommand();
+    if (autoCommand != null){
+      autoCommand.reset();
+    }
   }
 
 }

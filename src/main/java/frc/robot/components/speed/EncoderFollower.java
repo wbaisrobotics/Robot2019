@@ -1,5 +1,6 @@
 package frc.robot.components.speed;
 
+import frc.robot.constants.MotionProfilingConstants;
 import jaci.pathfinder.Trajectory;
 
 /**
@@ -25,6 +26,8 @@ public class EncoderFollower {
      * The latest heading
      */
     private double heading;
+
+    private int ticksPerMeter;
 
     /**
      * The segment currently being processed
@@ -61,9 +64,10 @@ public class EncoderFollower {
      * @param initial_position      The initial 'offset' of your encoder. This should be set to the encoder value just
      *                              before you start to track
      */
-    public void configureEncoder(int initial_position) {
+    public void configureEncoder(int initial_position, int ticksPerMeter) {
         // Store the initial value
         initialEncoderValue = initial_position;
+        this.ticksPerMeter = ticksPerMeter;
     }
 
     /**
@@ -82,7 +86,7 @@ public class EncoderFollower {
      */
     public double calculate(int encoderLoc) {
         // Number of Revolutions * Wheel Circumference
-        double distance_covered = encoderLoc - initialEncoderValue;
+        double distance_covered = (encoderLoc - initialEncoderValue)/ticksPerMeter;
         // If done, return 0
         if (segment >= trajectory.length()) {
             return 0;

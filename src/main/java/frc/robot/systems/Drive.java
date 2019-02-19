@@ -18,6 +18,7 @@ import frc.robot.util.Logger;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -72,6 +73,7 @@ public class Drive extends Subsystem{
             // Initialize the gyro
             ADXRS450_Gyro gyro = new ADXRS450_Gyro();
             // Add gyro to IO Dashboard
+            System.out.println("HI");
             SmartDashboard.putData(gyro);
             //NetworkTableCommunicator.setIoDashboardValue("Gyro", gyro);
 
@@ -122,7 +124,7 @@ public class Drive extends Subsystem{
     public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
 
         // Call DifferentialDrive with the controllers
-        drive = new DifferentialDrive (left1, right1);
+        drive = new DifferentialDrive (new SpeedControllerGroup(left1, left2, left3), new SpeedControllerGroup(right1, right2, right3));
         // Save the controllers
         this.left = left1;
         this.right = right1;
@@ -140,19 +142,23 @@ public class Drive extends Subsystem{
 
         // Set the inverted settings for the masters
         left1.setInverted(LEFT_SIDE_REVERSE);
+        left2.setInverted(LEFT_SIDE_REVERSE);
+        left3.setInverted(LEFT_SIDE_REVERSE);
         right1.setInverted(RIGHT_SIDE_REVERSE); 
+        right2.setInverted(RIGHT_SIDE_REVERSE); 
+        right3.setInverted(RIGHT_SIDE_REVERSE); 
 
         // Configure the other talons to follow
-        left2.follow(left1);
-        left3.follow(left1);
-        right2.follow(right1);
-        right3.follow(right1);
+        // left2.follow(left1);
+        // left3.follow(left1);
+        // right2.follow(right1);
+        // right3.follow(right1);
 
         // Configure the other talons to invert
-        left2.setInverted(InvertType.FollowMaster);
-        left3.setInverted(InvertType.FollowMaster);
-        right2.setInverted(InvertType.FollowMaster);
-        right3.setInverted(InvertType.FollowMaster);
+        // left2.setInverted(InvertType.FollowMaster);
+        // left3.setInverted(InvertType.FollowMaster);
+        // right2.setInverted(InvertType.FollowMaster);
+        // right3.setInverted(InvertType.FollowMaster);
 
         // Set frame update to every 1ms for left
         left.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotionProfilingConstants.kMotionProfileLength);
@@ -160,13 +166,13 @@ public class Drive extends Subsystem{
         right.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, MotionProfilingConstants.kMotionProfileLength);
 
         // Config the sensor coefficient for left
-        left.configSelectedFeedbackCoefficient(MotionProfilingConstants.kTicksPerMeterLeft);
+        left.configSelectedFeedbackCoefficient(1/MotionProfilingConstants.kTicksPerMeterLeft);
         // Invert the left sensor
-        left.setSensorPhase(true);
+        left.setSensorPhase(false);
         // Config the sensor coefficient for right
-        right.configSelectedFeedbackCoefficient(MotionProfilingConstants.kTicksPerMeterRight);
+        right.configSelectedFeedbackCoefficient(1/MotionProfilingConstants.kTicksPerMeterRight);
         // Invert the right sensor
-        right.setSensorPhase(true);
+        right.setSensorPhase(false);
 
         // Stop the WPILib class from inverting the right side
         drive.setRightSideInverted(false);

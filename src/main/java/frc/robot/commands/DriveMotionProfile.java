@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.components.speed.EncoderFollower;
 import frc.robot.constants.MotionProfilingConstants;
@@ -72,9 +73,9 @@ public class DriveMotionProfile extends Command {
   protected void initialize() {
 
     // Configure the left encoder's starting position
-    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
     // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
@@ -109,8 +110,10 @@ public class DriveMotionProfile extends Command {
   protected void end() {
     // Stop the motors
     Drive.getInstance().stop();
+    if (m_follower_notifier != null){
     // End the notifier
     m_follower_notifier.stop();
+    }
     // Log the end
     Logger.log("Finished driving the motion profiling");
   }
@@ -146,12 +149,19 @@ public class DriveMotionProfile extends Command {
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
       double turn =  MotionProfilingConstants.kTurn  * (-1.0/80.0) * heading_difference;
 
+      // System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
+      // System.out.println("Left: " + (left_speed + turn) + ", Right: " + (right_speed - turn));
+
+      SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
+      SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
+
+
       // Set the speeds to the motors
       Drive.getInstance().tankDrive((left_speed + turn), (right_speed - turn));
 
       // Log the current status every n times
       Logger.logEvery("Drive Motion Profile Status: Left Error: " + m_left_follower.lastError
-       + ", Right Error: " + m_right_follower.lastError + ", Total Calculation Time: " + (System.currentTimeMillis() - startTime), 20, this);
+       + ", Right Error: " + m_right_follower.lastError + "-" + ", Gyro Error: " + heading_difference + " (" + heading + ")" + ", Total Calculation Time: " + (System.currentTimeMillis() - startTime), 1, this);
 
     }
   }
@@ -169,9 +179,17 @@ public class DriveMotionProfile extends Command {
       MotionProfilingConstants.kA = NetworkTableCommunicator.get(SmartDashboardConstants.A_CONST).getDouble();
       MotionProfilingConstants.kTurn = NetworkTableCommunicator.get(SmartDashboardConstants.TURN_CONST).getDouble();
 
+      System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
+
       // Update the followers
       m_left_follower.configurePDVA(MotionProfilingConstants.kP, MotionProfilingConstants.kD, MotionProfilingConstants.kV, MotionProfilingConstants.kA);
       m_right_follower.configurePDVA(MotionProfilingConstants.kP, MotionProfilingConstants.kD, MotionProfilingConstants.kV, MotionProfilingConstants.kA);
       
+  }
+
+  public void reset(){
+    end();
+    this.m_left_follower.reset();
+    this.m_right_follower.reset();
   }
 }
