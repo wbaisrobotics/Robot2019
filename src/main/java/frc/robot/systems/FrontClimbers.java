@@ -67,12 +67,12 @@ public class FrontClimbers extends Subsystem{
     /**
      * The power granted during extension
      */
-    public double EXTEND_POWER = 1.0;
+    public double EXTEND_POWER = 0.7;
 
     /**
      * The power granted during retraction
      */
-    public double RETRACT_POWER = -1.0;
+    public double RETRACT_POWER = -0.7;
 
     /**
      * The switch ranged controller representing left
@@ -96,7 +96,7 @@ public class FrontClimbers extends Subsystem{
     SpeedController rightMotor, LimitSwitch rightRetractedSwitch, LimitSwitch rightExtendedSwitch){
 
         // Don't invert the left motor
-        leftMotor.setInverted(true);
+        leftMotor.setInverted(false);
         
         // Initialize the left motor ranged controller with
         // the left extended switch representing the switch that halts motion in the + [Raw] (extending) direction when activated
@@ -104,7 +104,7 @@ public class FrontClimbers extends Subsystem{
         this.leftMotor = new SwitchRangedController(leftMotor, leftExtendedSwitch, leftRetractedSwitch);
 
         // Invert the right motor (due to symmetry)
-        rightMotor.setInverted(false);
+        rightMotor.setInverted(true);
 
         // Initialize the right motor ranged controller with
         // the right extended switch representing the switch that halts motion in the + [Set] (extending) direction when activated
@@ -124,11 +124,13 @@ public class FrontClimbers extends Subsystem{
     }
 
     public boolean extendLeft (){
-        return this.leftMotor.setControlled(EXTEND_POWER*SmartDashboard.getNumber("Left Front Climber Constant", 0));
+        this.leftMotor.set(EXTEND_POWER * 0.95);
+        return false;
     }
 
     public boolean extendRight (){
-        return this.rightMotor.setControlled(EXTEND_POWER*SmartDashboard.getNumber("Right Front Climber Constant", 0));
+        this.rightMotor.set(EXTEND_POWER);
+        return false;
     }
 
     /**
@@ -143,13 +145,13 @@ public class FrontClimbers extends Subsystem{
 
     public boolean retractLeft (){
         // TO CHANGE BACK
-        this.leftMotor.set(RETRACT_POWER * SmartDashboard.getNumber("Left Front Climber Constant", 0));
+        this.leftMotor.set(RETRACT_POWER);
         return false;
     }
 
     public boolean retractRight (){
         // TO CHANGE BACK
-        this.rightMotor.set(RETRACT_POWER * SmartDashboard.getNumber("Right Front Climber Constant", 0));
+        this.rightMotor.set(RETRACT_POWER);
         return false;
     }
 

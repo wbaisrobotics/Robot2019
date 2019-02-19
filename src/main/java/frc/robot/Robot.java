@@ -140,7 +140,11 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
+    climbingMode = false;
+
   }
+
+  private boolean climbingMode = false;
 
   @Override
   public void teleopPeriodic() {
@@ -152,111 +156,136 @@ public class Robot extends TimedRobot {
      */
     // Scheduler.getInstance().run();
 
-    if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
-      Drive.getInstance().toggleGearSpeed();
+    if (OI.getCoPilot().getBackButton() && OI.getCoPilot().getStartButton()){
+      climbingMode = true;
+      System.out.println("Entered Climb Mode");
     }
 
-    if (OI.getCoPilot().getBButtonPressed()){
-      Drive.getInstance().toggleReverse();
-    }
-
-    Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
+    
 
     SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
     SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getEncoder().getPosition());
 
-    if (OI.getPilot().getAButton()){
-      FrontClimbers.getInstance().extend();
-      BackClimbers.getInstance().extend();
-    }
-    else if (OI.getPilot().getBButton()){
-      FrontClimbers.getInstance().retract();
-    }
-    else if (OI.getPilot().getXButton()){
-      BackClimbers.getInstance().retract();
+    if (climbingMode){
+
+      Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), 0);
+
+      if (OI.getCoPilot().getAButton()){
+        FrontClimbers.getInstance().extend();
+        BackClimbers.getInstance().extend();
+      }
+      else if (OI.getCoPilot().getXButton() || OI.getCoPilot().getBButton()){
+        if (OI.getCoPilot().getXButton()){
+          FrontClimbers.getInstance().retract();
+        }
+        if (OI.getCoPilot().getBButton()){
+          BackClimbers.getInstance().retract();
+        }
+      } 
+      else{
+  
+        // Inidividual control
+  
+        // Front left ( Left Bumper )
+        if ((!OI.getCoPilot().getYButton()) && OI.getCoPilot().getBumper(Hand.kLeft)){
+          BackClimbers.getInstance().extendLeft();
+        }
+        else if ((OI.getCoPilot().getYButton()) && OI.getCoPilot().getBumper(Hand.kLeft)){
+          BackClimbers.getInstance().retractLeft();
+        }
+        else{
+          BackClimbers.getInstance().stopLeft();
+        }
+  
+        // Front right ( Right Bumper )
+        if ((!OI.getCoPilot().getYButton()) && OI.getCoPilot().getBumper(Hand.kRight)){
+          BackClimbers.getInstance().extendRight();
+        }
+        else if ((OI.getCoPilot().getYButton()) && OI.getCoPilot().getBumper(Hand.kRight)){
+          BackClimbers.getInstance().retractRight();
+        }
+        else{
+          BackClimbers.getInstance().stopRight();
+        }
+  
+        // Back left (Left Trigger)
+        if ((!OI.getCoPilot().getYButton()) && (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
+          FrontClimbers.getInstance().extendLeft();
+        }
+        else if ((OI.getCoPilot().getYButton()) && (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
+          FrontClimbers.getInstance().retractLeft();
+        }
+        else{
+          FrontClimbers.getInstance().stopLeft();
+        }
+  
+        // Back right (Right Trigger)
+        if ((!OI.getCoPilot().getYButton()) && (OI.getCoPilot().getTriggerAxis(Hand.kRight) > 0.2)){
+          FrontClimbers.getInstance().extendRight();
+        }
+        else if ((OI.getCoPilot().getYButton()) && (OI.getCoPilot().getTriggerAxis(Hand.kRight) > 0.2)){
+          FrontClimbers.getInstance().retractRight();
+        }
+        else{
+          FrontClimbers.getInstance().stopRight();
+        }
+
+    
+  
+      }
+
+      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+
+      DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kRight)) > 0.1? OI.getPilot().getY(Hand.kRight):0);
+
+  
+
     }
     else{
 
-      // Inidividual control
+      Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft), -OI.getPilot().getX(Hand.kRight));
 
-      // Front left ( Left Bumper )
-      if ((!OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kLeft)){
-        FrontClimbers.getInstance().extendLeft();
+      if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+        Drive.getInstance().toggleGearSpeed();
       }
-      else if ((OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kLeft)){
-        FrontClimbers.getInstance().retractLeft();
+  
+      if (OI.getCoPilot().getBButtonPressed()){
+        Drive.getInstance().toggleReverse();
+      }
+
+      if (OI.getCoPilot().getBumper(Hand.kLeft)){
+        BallManipulator.getInstance().liftBall();
       }
       else{
-        FrontClimbers.getInstance().stopLeft();
+        BallManipulator.getInstance().stopElevator();
       }
 
-      // Front right ( Right Bumper )
-      if ((!OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kRight)){
-        FrontClimbers.getInstance().extendRight();
-      }
-      else if ((OI.getPilot().getYButton()) && OI.getPilot().getBumper(Hand.kRight)){
-        FrontClimbers.getInstance().retractRight();
+      if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.3){
+        BallManipulator.getInstance().shooterOut();
       }
       else{
-        FrontClimbers.getInstance().stopRight();
+        BallManipulator.getInstance().stopShooter();
       }
 
-      // Back left (Left Trigger)
-      if ((!OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
-        BackClimbers.getInstance().extendLeft();
-      }
-      else if ((OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.2)){
-        BackClimbers.getInstance().retractLeft();
+      if (OI.getCoPilot().getYButton()){
+        HatchManipulator.getInstance().thunkerDown();
       }
       else{
-        BackClimbers.getInstance().stopLeft();
+        HatchManipulator.getInstance().thunkerUp();
       }
 
-      // Back right (Right Trigger)
-      if ((!OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kRight) > 0.2)){
-        BackClimbers.getInstance().extendRight();
-      }
-      else if ((OI.getPilot().getYButton()) && (OI.getPilot().getTriggerAxis(Hand.kRight) > 0.2)){
-        BackClimbers.getInstance().retractRight();
+      if (OI.getCoPilot().getXButton()){
+        HatchManipulator.getInstance().shooterOut();
       }
       else{
-        BackClimbers.getInstance().stopRight();
+        HatchManipulator.getInstance().shooterIn();
       }
 
+      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
 
-    }
+      DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
 
-    if (OI.getCoPilot().getBumper(Hand.kLeft)){
-      BallManipulator.getInstance().liftBall();
-    }
-    else{
-      BallManipulator.getInstance().stopElevator();
-    }
-
-    if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.3){
-      BallManipulator.getInstance().shooterOut();
-    }
-    else{
-      BallManipulator.getInstance().stopShooter();
-    }
-
-    if (OI.getCoPilot().getYButton()){
-      HatchManipulator.getInstance().thunkerDown();
-    }
-    else{
-      HatchManipulator.getInstance().thunkerUp();
-    }
-
-    if (OI.getCoPilot().getXButton()){
-      HatchManipulator.getInstance().shooterOut();
-    }
-    else{
-      HatchManipulator.getInstance().shooterIn();
-    }
-
-    DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
-
-    DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getCoPilot().getY(Hand.kRight)) > 0.1? OI.getCoPilot().getY(Hand.kRight):0);
+    } 
 
   }
 
@@ -276,6 +305,12 @@ public class Robot extends TimedRobot {
     if (autoCommand != null){
       autoCommand.reset();
     }
+
+    Drive.getInstance().stop();
+    FrontClimbers.getInstance().stop();
+    BackClimbers.getInstance().stop();
+    BallManipulator.getInstance().stop();
+    DeathCrawler.getInstance().stop();
   }
 
 }

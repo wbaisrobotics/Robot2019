@@ -70,7 +70,7 @@ public class DeathCrawler{
         }
         // Going down
         else{
-            this.wormArmMotor.set(speed * 0.4);
+            this.wormArmMotor.set(speed * 0.75);
         }
         
     }

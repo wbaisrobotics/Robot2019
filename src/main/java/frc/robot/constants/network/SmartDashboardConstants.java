@@ -24,10 +24,10 @@ public enum SmartDashboardConstants{
     /**
      * Climber constants
      */
-    LEFT_BACK_CLIMBER_CONSTANT ("Left Back Climber Constant", NetworkTableValue.makeDouble (0.0)),
-    RIGHT_BACK_CLIMBER_CONSTANT ("Right Back Climber Constant", NetworkTableValue.makeDouble (0.0)),
-    LEFT_FRONT_CLIMBER_CONSTANT ("Left Front Climber Constant", NetworkTableValue.makeDouble (0.0)),
-    RIGHT_FRONT_CLIMBER_CONSTANT ("Left Back Climber Constant", NetworkTableValue.makeDouble (0.0)),
+    LEFT_BACK_CLIMBER_CONSTANT ("Left Back Climber Constant", NetworkTableValue.makeDouble (1.0)),
+    RIGHT_BACK_CLIMBER_CONSTANT ("Right Back Climber Constant", NetworkTableValue.makeDouble (1.0)),
+    LEFT_FRONT_CLIMBER_CONSTANT ("Left Front Climber Constant", NetworkTableValue.makeDouble (1.0)),
+    RIGHT_FRONT_CLIMBER_CONSTANT ("Right Front Climber Constant", NetworkTableValue.makeDouble (1.0)),
 
     ;
 
