@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
   }
 
   public DriveMotionProfile getAutoCommand (){
-    return new DriveMotionProfile("FromCenterToSide4");
+    return new DriveMotionProfile("FromRightToSide3");
   }
 
   @Override
@@ -135,6 +135,12 @@ public class Robot extends TimedRobot {
 
     // Log the init
     Logger.log("Teleoperation Begins");
+
+        // If auto command is not null
+        if (autoCommand != null){
+          // Start the auto command
+          autoCommand.cancel();
+        }
 
     climbingMode = false;
 
@@ -249,9 +255,13 @@ public class Robot extends TimedRobot {
         DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
       }
       
-
-      Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
-
+      if (Drive.getInstance().isHighGear()){
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
+      }
+      else{
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
+      }
+      
       if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
         Drive.getInstance().toggleGearSpeed();
       }

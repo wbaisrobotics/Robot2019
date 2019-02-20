@@ -27,7 +27,7 @@ public class EncoderFollower {
      */
     private double heading;
 
-    private int ticksPerMeter;
+    private double ticksPerMeter;
 
     /**
      * The segment currently being processed
@@ -64,7 +64,7 @@ public class EncoderFollower {
      * @param initial_position      The initial 'offset' of your encoder. This should be set to the encoder value just
      *                              before you start to track
      */
-    public void configureEncoder(int initial_position, int ticksPerMeter) {
+    public void configureEncoder(int initial_position, double ticksPerMeter) {
         // Store the initial value
         initialEncoderValue = initial_position;
         this.ticksPerMeter = ticksPerMeter;

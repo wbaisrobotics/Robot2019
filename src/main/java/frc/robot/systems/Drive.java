@@ -242,6 +242,10 @@ public class Drive extends Subsystem{
           this.gearShifter.set(this.gearShifter.get() == Value.kForward?Value.kReverse:Value.kForward);
       }
 
+      public boolean isHighGear(){
+        return this.gearShifter.get() == Value.kForward;
+      }
+
       /**
        * Returns the gyro
        * @return gyro

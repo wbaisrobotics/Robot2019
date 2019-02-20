@@ -61,8 +61,8 @@ public class DriveMotionProfile extends Command {
 
     // Read the trajectories
     try{
-      leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
-      rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
+      leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
+      rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
     }
     catch (IOException exception){
       Logger.log("IO Exception at loading motion profile: " + pathName);
@@ -155,17 +155,18 @@ public class DriveMotionProfile extends Command {
       double heading = Drive.getInstance().getGyro().getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
       double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-      double turn =  MotionProfilingConstants.kTurn  * (-1.0/80.0) * heading_difference;
+      double turn =  -MotionProfilingConstants.kTurn  * (-1.0/80.0) * heading_difference;
 
       // // System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
       // // System.out.println("Left: " + (left_speed + turn) + ", Right: " + (right_speed - turn));
 
       SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
+      // SmartDashboard.putNumber("Left Setpoint", m_left_follower.getSegment().position);
       SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getEncoder().getPosition());
-
+      // SmartDashboard.putNumber("Right Setpoint", m_right_follower.getSegment().position);
 
       // // Set the speeds to the motors
-      Drive.getInstance().tankDrive((left_speed + turn), (right_speed - turn));
+      Drive.getInstance().tankDrive(-(left_speed + turn), -(right_speed - turn));
 
       // // Log the current status every n times
       Logger.logEvery("Drive Motion Profile Status: Left Error: " + m_left_follower.lastError
