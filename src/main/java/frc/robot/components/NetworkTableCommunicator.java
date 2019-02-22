@@ -5,6 +5,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
 import frc.robot.constants.network.SmartDashboardConstants;
+import frc.robot.constants.network.VisionTargetInfo;
 
 /**
  * Class for communicating with the network tables
@@ -30,6 +31,8 @@ public class NetworkTableCommunicator{
         initSolenoidDashboard();
         // Init the IO dashboard
         initIoDashboard();
+        // Init the vision dashboard
+        initVisionDashboard();
     }
 
     /** ---- Smart Dashboard ---- */
@@ -191,6 +194,38 @@ public class NetworkTableCommunicator{
      */
     public static NetworkTableValue getIoDashboardValue (String loc){
         return ioDashboard.getEntry(loc).getValue();
+    }
+
+    /* -- Vision Dashboard --- */
+
+    /**
+     * The name for the vision table
+     */
+    public static final String VISION_DASHBOARD_NAME = "vision";
+
+    /**
+     * The vision dashboard network table
+     */
+    private static NetworkTable visionDashboard;
+
+    /**
+     * Initializes the io dashboard
+     */
+    private static void initVisionDashboard (){
+        // Retrieve the io dashboard table
+        visionDashboard = tableInstance.getTable(VISION_DASHBOARD_NAME);
+    }
+
+    public static VisionTargetInfo getTargetInfo (){
+
+        // Retrieve the values from the table
+        double xDiff = visionDashboard.getEntry("Target X Difference").getDouble(-9999);
+        double yDiff = visionDashboard.getEntry("Target Y Difference").getDouble(-9999);
+        double heightRatio = visionDashboard.getEntry("Height Ratio").getDouble(-9999);
+        double ttsr = visionDashboard.getEntry("TTSR Ratio").getDouble(-9999);
+
+        // Construct and return the object
+        return new VisionTargetInfo(xDiff, yDiff, heightRatio, ttsr);
     }
 
 

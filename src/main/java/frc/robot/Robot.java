@@ -97,11 +97,20 @@ public class Robot extends TimedRobot {
   }
 
   public DriveMotionProfile getAutoCommand (){
-    return new DriveMotionProfile("FromRightToSide3");
+    return new DriveMotionProfile("FromSide5ToCollectRight");
   }
 
   @Override
   public void autonomousInit() {
+
+
+    Drive.getInstance().setReverse(false);
+
+    climbingMode = false;
+
+    if (Drive.getInstance().isHighGear()){
+      Drive.getInstance().toggleGearSpeed();
+    }
 
     // Log the init
     Logger.log("Autonomous Begins");
@@ -114,7 +123,7 @@ public class Robot extends TimedRobot {
     // If auto command is not null
     if (autoCommand != null){
       // Start the auto command
-      // autoCommand.start();
+      autoCommand.start();
     }
 
   }
@@ -125,9 +134,10 @@ public class Robot extends TimedRobot {
     /**
      * Run the scheduler
      */
-    // Scheduler.getInstance().run();
-    teleopPeriodic();
-  
+    Scheduler.getInstance().run();
+    if (autoCommand.isCompleted()){
+      teleopPeriodic();
+    }
   }
 
   @Override
@@ -142,6 +152,8 @@ public class Robot extends TimedRobot {
           autoCommand.cancel();
         }
 
+    Drive.getInstance().setReverse(false);
+
     climbingMode = false;
 
   }
@@ -151,7 +163,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
+    // System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
 
     /**
      * Run the scheduler

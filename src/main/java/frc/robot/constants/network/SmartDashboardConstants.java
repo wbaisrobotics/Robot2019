@@ -19,15 +19,6 @@ public enum SmartDashboardConstants{
     D_CONST ("D Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kD)),
     V_CONST ("V Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kV)),
     A_CONST ("A Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kA)),
-    TURN_CONST ("Turn Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kTurn)),
-    
-    /**
-     * Climber constants
-     */
-    LEFT_BACK_CLIMBER_CONSTANT ("Left Back Climber Constant", NetworkTableValue.makeDouble (1.0)),
-    RIGHT_BACK_CLIMBER_CONSTANT ("Right Back Climber Constant", NetworkTableValue.makeDouble (1.0)),
-    LEFT_FRONT_CLIMBER_CONSTANT ("Left Front Climber Constant", NetworkTableValue.makeDouble (1.0)),
-    RIGHT_FRONT_CLIMBER_CONSTANT ("Right Front Climber Constant", NetworkTableValue.makeDouble (1.0)),
 
     ;
 
