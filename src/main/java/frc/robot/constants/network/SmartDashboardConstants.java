@@ -19,7 +19,7 @@ public enum SmartDashboardConstants{
     D_CONST ("D Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kD)),
     V_CONST ("V Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kV)),
     A_CONST ("A Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kA)),
-
+    TURN_CONST ("Turn Const", NetworkTableValue.makeDouble (MotionProfilingConstants.kTurn))
     ;
 
     /**

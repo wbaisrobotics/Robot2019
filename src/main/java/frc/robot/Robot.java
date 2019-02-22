@@ -359,6 +359,8 @@ public class Robot extends TimedRobot {
 
     // Unwrap the target info
     double xDiff = targetInfo.getXDiff();
+
+    System.out.println(xDiff);
     // double yDiff = targetInfo.getYDiff();
     // double heightRatio = targetInfo.getHeightRatio();
     // double ttsr = targetInfo.getTTSR();
