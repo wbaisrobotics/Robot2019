@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
+import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.oi.OI;
 import frc.robot.oi.POVDirection;
 import frc.robot.systems.BackClimbers;
@@ -44,6 +45,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    SmartDashboard.putNumber("Vision Forward Const", 0);
+    SmartDashboard.putNumber("Vision P Const", 0);
 
     /**
      * Initialize the network table communicator
@@ -165,11 +169,6 @@ public class Robot extends TimedRobot {
 
     // System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
 
-    /**
-     * Run the scheduler
-     */
-    // Scheduler.getInstance().run();
-
     if (OI.getCoPilot().getBackButton() && OI.getCoPilot().getStartButton()){
       climbingMode = true;
       System.out.println("Entered Climb Mode");
@@ -255,7 +254,24 @@ public class Robot extends TimedRobot {
   
 
     }
+
+    // Not climbing mode
     else{
+
+      VisionTargetInfo targetInfo = NetworkTableCommunicator.getTargetInfo();
+
+      SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
+
+      // If following vision
+      if (OI.getPilot().getAButton()){
+        driveVision(targetInfo);
+      }
+      else if (Drive.getInstance().isHighGear()){
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
+      }
+      else{
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
+      }
 
       if (OI.getCoPilot().getPOV() == POVDirection.NORTH.getAngle()){
         BallManipulator.getInstance().lowerBall();
@@ -265,13 +281,6 @@ public class Robot extends TimedRobot {
       }
       else{
         DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
-      }
-      
-      if (Drive.getInstance().isHighGear()){
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
-      }
-      else{
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
       }
       
       if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
@@ -341,6 +350,27 @@ public class Robot extends TimedRobot {
     BackClimbers.getInstance().stop();
     BallManipulator.getInstance().stop();
     DeathCrawler.getInstance().stop();
+  }
+
+  /**
+   * Drive according to commands from vision
+   */
+  private void driveVision(VisionTargetInfo targetInfo){
+
+    // Unwrap the target info
+    double xDiff = targetInfo.getXDiff();
+    // double yDiff = targetInfo.getYDiff();
+    // double heightRatio = targetInfo.getHeightRatio();
+    // double ttsr = targetInfo.getTTSR();
+
+    double pConst = SmartDashboard.getNumber("Vision P Const", 0);
+
+    double turn = xDiff * pConst;
+
+    double forward = SmartDashboard.getNumber("Vision Forward Const", 0);
+
+    Drive.getInstance().arcadeDrive(forward, turn);
+
   }
 
 }
