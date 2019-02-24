@@ -81,9 +81,9 @@ public class DriveMotionProfile extends Command {
   protected void initialize() {
 
     // Configure the left encoder's starting position
-    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
+    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
     // // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), MotionProfilingConstants.kTicksPerMeterRight);
+    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
@@ -149,8 +149,8 @@ public class DriveMotionProfile extends Command {
       long startTime = System.currentTimeMillis();
 
       // Calculate the speeds of each side based on the encoder locations
-      double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getEncoder().getPosition());
-      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getEncoder().getPosition());
+      double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
       // // Calculate the gyro angle's effect
       double heading = Drive.getInstance().getGyro().getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
@@ -160,9 +160,9 @@ public class DriveMotionProfile extends Command {
       // // System.out.println("P: " + MotionProfilingConstants.kP + ", Turn: " + MotionProfilingConstants.kTurn);
       // // System.out.println("Left: " + (left_speed + turn) + ", Right: " + (right_speed - turn));
 
-      SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
+      SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getSelectedSensorPosition());
       // SmartDashboard.putNumber("Left Setpoint", m_left_follower.getSegment().position);
-      SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getEncoder().getPosition());
+      SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getSelectedSensorPosition());
       // SmartDashboard.putNumber("Right Setpoint", m_right_follower.getSegment().position);
 
       // // Set the speeds to the motors

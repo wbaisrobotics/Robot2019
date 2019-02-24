@@ -3,6 +3,7 @@ package frc.robot.systems;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 
@@ -57,16 +58,16 @@ public class Drive extends Subsystem{
             // Initialize the Talon SRXs
 
             // Initialize the left master
-            CANSparkMax left1 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_1);
+            WPI_TalonSRX left1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_1);
             // Initialize the left slaves
-            CANSparkMax left2 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_2);
-            CANSparkMax left3 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_LEFT_3);
+            WPI_TalonSRX left2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_2);
+            WPI_TalonSRX left3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_LEFT_3);
 
             // Initialize the right master
-            CANSparkMax right1 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_1);
+            WPI_TalonSRX right1 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_1);
             // Initialize the left slaves
-            CANSparkMax right2 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_2);
-            CANSparkMax right3 = SpeedControllers.getSparkMaxBrushless(CANWiring.DRIVE_RIGHT_3);
+            WPI_TalonSRX right2 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_2);
+            WPI_TalonSRX right3 = SpeedControllers.getTalonSRX(CANWiring.DRIVE_RIGHT_3);
 
             // Initialize the gear shifter
             DoubleSolenoid gearShifter = new DoubleSolenoid (PCMWiring.G_A.getPort(), PCMWiring.G_B.getPort());
@@ -92,11 +93,11 @@ public class Drive extends Subsystem{
     /**
      * The left master
      */
-    private CANSparkMax left;
+    private WPI_TalonSRX left;
     /**
      * The right master
      */
-    private CANSparkMax right;
+    private WPI_TalonSRX right;
 
     /**
      * The gear shifter
@@ -123,7 +124,7 @@ public class Drive extends Subsystem{
      * @param left - the left motors
      * @param right - the right motors
      */
-    public Drive (CANSparkMax left1, CANSparkMax left2, CANSparkMax left3, CANSparkMax right1, CANSparkMax right2, CANSparkMax right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
+    public Drive (WPI_TalonSRX left1, WPI_TalonSRX left2, WPI_TalonSRX left3, WPI_TalonSRX right1, WPI_TalonSRX right2, WPI_TalonSRX right3, DoubleSolenoid gearShifter, Gyro gyro, DigitalOutput indicatorLight){
 
         // Call DifferentialDrive with the controllers
         drive = new DifferentialDrive (new SpeedControllerGroup(left1, left2, left3), new SpeedControllerGroup(right1, right2, right3));
@@ -154,8 +155,8 @@ public class Drive extends Subsystem{
         gyro.reset();
 
         // Reset the encoders
-        left.getEncoder().setPosition(0);
-        right.getEncoder().setPosition(0);
+        left.setSelectedSensorPosition(0);
+        right.setSelectedSensorPosition(0);
 
         // Log the reset
         Logger.log("[Quadrature Encoders] All sensors are zeroed.");
@@ -176,7 +177,7 @@ public class Drive extends Subsystem{
        * Returns the left master
        * @return the left master controller
        */
-      public CANSparkMax getLeft(){
+      public WPI_TalonSRX getLeft(){
         return this.left;
       }
 
@@ -184,7 +185,7 @@ public class Drive extends Subsystem{
        * Returns the right master
        * @return the right master controller
        */
-      public CANSparkMax getRight(){
+      public WPI_TalonSRX getRight(){
         return this.right;
       }
 

@@ -47,10 +47,10 @@ public class BallManipulator{
             // then initialize:
 
             // Initialize the elevator motor
-            SpeedController elevatorMotor = SpeedControllers.getVictorSPX(CANWiring.BALL_ELEVATOR);
+            SpeedController elevatorMotor = SpeedControllers.getVictor(PWMWiring.BALL_ELEVATOR);
 
             // Initialize the shooter motor
-            SpeedController shooterMotor = SpeedControllers.getVictorSPX(CANWiring.BALL_SHOOTER);
+            SpeedController shooterMotor = SpeedControllers.getVictor(PWMWiring.BALL_SHOOTER);
             
             // Initialize the instance
             instance = new BallManipulator(elevatorMotor, shooterMotor);
