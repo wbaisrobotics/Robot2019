@@ -228,5 +228,13 @@ public class NetworkTableCommunicator{
         return new VisionTargetInfo(xDiff, yDiff, heightRatio, ttsr);
     }
 
+    /**
+     * Updates the status of the reverse boolean in the vision network table
+     * @param reverse - the new value of reverse
+     */
+    public static void updateReverseBoolean (boolean reverse){
+        visionDashboard.getEntry("Reverse").setBoolean(reverse);
+    }
+
 
 }
