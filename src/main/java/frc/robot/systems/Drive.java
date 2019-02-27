@@ -201,6 +201,9 @@ public class Drive extends Subsystem{
         // Set the reverse variable
         this.reverse = reverse;
 
+        // Update the vision reverse boolean
+        NetworkTableCommunicator.updateReverseBoolean(reverse);
+
         // Update the indicator LEDs
         indicatorLight.set(reverse);
 
