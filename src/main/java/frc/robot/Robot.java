@@ -46,8 +46,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-    SmartDashboard.putNumber("Vision Forward Const", 0);
-    SmartDashboard.putNumber("Vision P Const", 0);
+    SmartDashboard.putNumber("Vision Forward Const", -0.6);
+    SmartDashboard.putNumber("Vision P Const", -3);
 
     /**
      * Initialize the network table communicator
@@ -263,7 +263,7 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
 
       // If following vision
-      if (OI.getPilot().getAButton()){
+      if (!targetInfo.isError() && OI.getPilot().getAButton()){
         driveVision(targetInfo);
       }
       else if (Drive.getInstance().isHighGear()){
@@ -360,7 +360,6 @@ public class Robot extends TimedRobot {
     // Unwrap the target info
     double xDiff = targetInfo.getXDiff();
 
-    System.out.println(xDiff);
     // double yDiff = targetInfo.getYDiff();
     // double heightRatio = targetInfo.getHeightRatio();
     // double ttsr = targetInfo.getTTSR();
@@ -368,6 +367,7 @@ public class Robot extends TimedRobot {
     double pConst = SmartDashboard.getNumber("Vision P Const", 0);
 
     double turn = xDiff * pConst;
+    turn = Math.abs(turn)>0.5?Math.signum(turn)*0.5:turn;
 
     double forward = SmartDashboard.getNumber("Vision Forward Const", 0);
 
