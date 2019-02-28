@@ -263,11 +263,11 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
 
       // If following vision
-      if (!targetInfo.isError() && OI.getPilot().getAButton()){
+      if (!targetInfo.isError() && OI.getPilot().getBumper(Hand.kRight)){
         driveVision(targetInfo);
       }
       else if (Drive.getInstance().isHighGear()){
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.75, -OI.getPilot().getX(Hand.kRight)*0.75);
       }
       else{
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
@@ -283,7 +283,7 @@ public class Robot extends TimedRobot {
         DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
       }
       
-      if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+      if (OI.getPilot().getBumperPressed(Hand.kLeft)){
         Drive.getInstance().toggleGearSpeed();
       }
   

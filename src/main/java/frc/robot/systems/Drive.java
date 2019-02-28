@@ -228,6 +228,8 @@ public class Drive extends Subsystem{
        * Arcade drive (accounting for reverse)
        */
       public void arcadeDrive (double xSpeed, double zRotation){
+        //   xSpeed = xSpeed>0?xSpeed*xSpeed:-xSpeed*xSpeed;
+        //   zRotation = zRotation>0?zRotation*zRotation:-zRotation*zRotation;
           drive.arcadeDrive(getReverse()?-xSpeed:xSpeed, zRotation);
       }
 
