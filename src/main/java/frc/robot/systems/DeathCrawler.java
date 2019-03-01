@@ -4,10 +4,8 @@ package frc.robot.systems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.speed.SpeedControllers;
 import frc.robot.constants.wiring.CANWiring;
-import frc.robot.constants.wiring.PWMWiring;
 
 /**
  * Class representing the death crawler (both worm arm and the crawler)

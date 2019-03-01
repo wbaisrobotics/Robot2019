@@ -1,9 +1,6 @@
 
 package frc.robot.systems;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -11,7 +8,6 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.components.speed.SpeedControllers;
-import frc.robot.constants.MotionProfilingConstants;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
 import frc.robot.constants.wiring.PCMWiring;

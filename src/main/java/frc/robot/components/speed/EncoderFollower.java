@@ -1,6 +1,5 @@
 package frc.robot.components.speed;
 
-import frc.robot.constants.MotionProfilingConstants;
 import jaci.pathfinder.Trajectory;
 
 /**
