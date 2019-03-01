@@ -10,9 +10,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
+import frc.robot.constants.motionprofiling.ProfilingGroups;
 import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.oi.OI;
 import frc.robot.oi.POVDirection;
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Vision Forward Const", -0.6);
     SmartDashboard.putNumber("Vision P Const", -3);
+
+    setupAutoChooser();
 
     /**
      * Initialize the network table communicator
@@ -100,7 +104,53 @@ public class Robot extends TimedRobot {
 
   }
 
+  private SendableChooser<ProfilingGroups> autoChooser;
+
+  /**
+   * Sets up the smart dashbaord senable choosers
+   */
+  private void setupAutoChooser (){
+
+    /**
+     * Initiate the sendable chooser
+     */
+    autoChooser = new SendableChooser<ProfilingGroups>();
+
+    /**
+     * Add a no-auto option and have the object be null
+     */
+    autoChooser.addOption("None", null);
+
+    /**
+     * For each path group in ProfilingGroups, add a object to the chooser
+     */
+    for (ProfilingGroups group : ProfilingGroups.values()){
+      autoChooser.addOption(group.toString(), group);
+    }
+
+    /**
+     * Send the chooser to the smart dashboard
+     */
+    SmartDashboard.putData("Autonomous Chooser", autoChooser);
+
+  }
+
   public DriveMotionProfile getAutoCommand (){
+
+    /**
+     * Retrieve the selected path group
+     */
+    ProfilingGroups selectedPathGroup = autoChooser.getSelected();
+
+    /**
+     * If none was chosen, return null
+     */
+    if (selectedPathGroup == null){
+      return null;
+    }
+
+    // TO DO: Create the command using the profiling group
+
     return new DriveMotionProfile("FromSide5ToCollectRight");
   }
 
@@ -136,9 +186,20 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
 
     /**
+     * If the pilot desires to, cancel the auto command
+     */
+    if (OI.getPilot().getBackButton()){
+      autoCommand.cancel();
+    }
+
+    /**
      * Run the scheduler
      */
     Scheduler.getInstance().run();
+
+    /**
+     * Once the auto command is completed, run teleop
+     */
     if (autoCommand.isCompleted()){
       teleopPeriodic();
     }
@@ -150,11 +211,11 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
-        // If auto command is not null
-        if (autoCommand != null){
-          // Start the auto command
-          autoCommand.cancel();
-        }
+    // If auto command is not null
+    if (autoCommand != null){
+      // Start the auto command
+      autoCommand.cancel();
+    }
 
     Drive.getInstance().setReverse(false);
 
@@ -326,14 +387,6 @@ public class Robot extends TimedRobot {
 
   }
 
-  @Override
-  public void testInit() {
-  }
-
-  @Override
-  public void testPeriodic() {
-  }
-
   public void disabledInit (){
 
     Drive.getInstance().reset();
@@ -341,15 +394,19 @@ public class Robot extends TimedRobot {
      * Initialize the auto command
      */
     // autoCommand = getAutoCommand();
+
+    // Reset the auto command, if it exists
     if (autoCommand != null){
       autoCommand.reset();
     }
 
+    // Stop all the systems
     Drive.getInstance().stop();
     FrontClimbers.getInstance().stop();
     BackClimbers.getInstance().stop();
     BallManipulator.getInstance().stop();
     DeathCrawler.getInstance().stop();
+
   }
 
   /**
