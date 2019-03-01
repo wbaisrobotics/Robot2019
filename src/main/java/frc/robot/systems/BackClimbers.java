@@ -2,7 +2,6 @@ package frc.robot.systems;
 
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.LimitSwitch;
 import frc.robot.components.LimitSwitch.SwitchConfiguration;
 import frc.robot.components.LimitSwitch.WiringConfiguration;
@@ -10,7 +9,6 @@ import frc.robot.components.speed.SpeedControllers;
 import frc.robot.components.speed.SwitchRangedController;
 import frc.robot.constants.wiring.CANWiring;
 import frc.robot.constants.wiring.DIOWiring;
-import frc.robot.constants.wiring.PWMWiring;
 
 /**
  * The climbers in the back of the robot used to fix the angle for climbing lvl 2/3
