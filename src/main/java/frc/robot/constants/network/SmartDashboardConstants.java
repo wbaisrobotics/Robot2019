@@ -3,7 +3,7 @@ package frc.robot.constants.network;
 
 import edu.wpi.first.networktables.NetworkTableValue;
 
-import frc.robot.constants.MotionProfilingConstants;
+import frc.robot.constants.motionprofiling.MotionProfilingConstants;
 
 /**
  * The key constants for Smart Dashboard communication

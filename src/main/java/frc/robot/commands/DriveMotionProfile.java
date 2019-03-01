@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.components.speed.EncoderFollower;
-import frc.robot.constants.MotionProfilingConstants;
+import frc.robot.constants.motionprofiling.MotionProfilingConstants;
 import frc.robot.constants.network.SmartDashboardConstants;
 import frc.robot.systems.Drive;
 import frc.robot.util.Logger;
