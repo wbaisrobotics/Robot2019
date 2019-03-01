@@ -8,23 +8,23 @@ public enum CANWiring {
     // Represents the different CAN devices and their cooresponding IDs
 
     // Drive controllers (TALON SRX - 40A)
-    DRIVE_LEFT_1 (1),
-    DRIVE_LEFT_2 (2),
-    DRIVE_LEFT_3 (3),
-    DRIVE_RIGHT_1 (4),
-    DRIVE_RIGHT_2 (5),
-    DRIVE_RIGHT_3 (6),
+    DRIVE_LEFT_1 (10),
+    DRIVE_LEFT_2 (11),
+    DRIVE_LEFT_3 (12),
+    DRIVE_RIGHT_1 (13),
+    DRIVE_RIGHT_2 (14),
+    DRIVE_RIGHT_3 (15),
 
     // Death Crawler controllers (SPARK MAX - 40A)
     DEATH_CRAWLER (27),
     // Death Crawler Arm (TALON SRX - 40A)
-    DEATH_CRAWLER_ARM (11),
+    DEATH_CRAWLER_ARM (6),
 
     // Climber ports (TALON SRX - 30A)
-    CLIMBER_FRONT_RIGHT (13),
-    CLIMBER_FRONT_LEFT (12),
-    CLIMBER_BACK_RIGHT (15),
-    CLIMBER_BACK_LEFT (14),
+    CLIMBER_FRONT_RIGHT (5),
+    CLIMBER_FRONT_LEFT (4),
+    CLIMBER_BACK_RIGHT (3),
+    CLIMBER_BACK_LEFT (2),
 
     ;
 

@@ -64,12 +64,12 @@ public class BackClimbers extends Subsystem{
     /**
      * The power granted during extension
      */
-    public double EXTEND_POWER = 0.85;
+    public double EXTEND_POWER = 1;
 
     /**
      * The power granted during retraction
      */
-    public double RETRACT_POWER = -0.85;
+    public double RETRACT_POWER = -1;
 
     /**
      * The switch ranged controller representing left
@@ -126,7 +126,7 @@ public class BackClimbers extends Subsystem{
     }
 
     public boolean extendRight (){
-        this.rightMotor.set(EXTEND_POWER);
+        this.rightMotor.set(EXTEND_POWER*0.90);
         return false;
     }
 
@@ -148,7 +148,7 @@ public class BackClimbers extends Subsystem{
 
     public boolean retractRight (){
         // TO CHANGE BACK
-        this.rightMotor.set(RETRACT_POWER);
+        this.rightMotor.set(RETRACT_POWER*0.90);
         return false;
     }
 

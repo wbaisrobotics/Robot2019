@@ -138,10 +138,10 @@ public class Robot extends TimedRobot {
     /**
      * Run the scheduler
      */
-    Scheduler.getInstance().run();
-    if (autoCommand.isCompleted()){
+    // Scheduler.getInstance().run();
+    // if (autoCommand.isCompleted()){
       teleopPeriodic();
-    }
+    // }
   }
 
   @Override
@@ -247,7 +247,7 @@ public class Robot extends TimedRobot {
   
       }
 
-      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getPilot().getTriggerAxis(Hand.kRight)*0.4:0);
 
       DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kRight)) > 0.1? OI.getPilot().getY(Hand.kRight):0);
 
@@ -263,7 +263,7 @@ public class Robot extends TimedRobot {
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
 
       // If following vision
-      if (!targetInfo.isError() && OI.getPilot().getAButton()){
+      if (!targetInfo.isError() && OI.getPilot().getBumper(Hand.kRight)){
         driveVision(targetInfo);
       }
       else if (Drive.getInstance().isHighGear()){
@@ -277,13 +277,13 @@ public class Robot extends TimedRobot {
         BallManipulator.getInstance().lowerBall();
       }
       if (OI.getCoPilot().getPOV() == POVDirection.SOUTH.getAngle()){
-        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
-      }
-      else{
         DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
       }
+      else{
+        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+      }
       
-      if (OI.getPilot().getStickButtonPressed(Hand.kLeft)){
+      if (OI.getPilot().getBumperPressed(Hand.kLeft)){
         Drive.getInstance().toggleGearSpeed();
       }
   

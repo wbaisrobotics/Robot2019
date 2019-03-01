@@ -67,12 +67,12 @@ public class FrontClimbers extends Subsystem{
     /**
      * The power granted during extension
      */
-    public double EXTEND_POWER = 0.7;
+    public double EXTEND_POWER = 0.9;
 
     /**
      * The power granted during retraction
      */
-    public double RETRACT_POWER = -0.7;
+    public double RETRACT_POWER = -0.9;
 
     /**
      * The switch ranged controller representing left
@@ -124,7 +124,7 @@ public class FrontClimbers extends Subsystem{
     }
 
     public boolean extendLeft (){
-        this.leftMotor.set(EXTEND_POWER * 0.95);
+        this.leftMotor.set(EXTEND_POWER);
         return false;
     }
 

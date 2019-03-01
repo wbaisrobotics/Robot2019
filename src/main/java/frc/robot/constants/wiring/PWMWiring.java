@@ -8,8 +8,8 @@ public enum PWMWiring {
     // Represents the different PWM devices and their cooresponding IDs
 
     // Ball Elevator/Shooter ports (VICTOR SP - 30A) 
-    BALL_ELEVATOR (5),
-    BALL_SHOOTER (4),
+    BALL_ELEVATOR (0),
+    BALL_SHOOTER (1),
     
     ;
 
