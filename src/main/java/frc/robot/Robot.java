@@ -319,6 +319,10 @@ public class Robot extends TimedRobot {
     // Not climbing mode
     else{
 
+      if (OI.getPilot().getYButtonPressed()){
+        NetworkTableCommunicator.toggleRunVision();
+      }
+
       VisionTargetInfo targetInfo = NetworkTableCommunicator.getTargetInfo();
 
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
