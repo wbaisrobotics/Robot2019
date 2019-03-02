@@ -319,7 +319,7 @@ public class Robot extends TimedRobot {
     // Not climbing mode
     else{
 
-      if (OI.getPilot().getYButtonPressed()){
+      if (OI.getCoPilot().getAButtonPressed()){
         NetworkTableCommunicator.toggleRunVision();
       }
 
