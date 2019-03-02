@@ -6,6 +6,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
 import frc.robot.constants.network.SmartDashboardConstants;
 import frc.robot.constants.network.VisionTargetInfo;
+import frc.robot.util.Logger;
 
 /**
  * Class for communicating with the network tables
@@ -234,6 +235,11 @@ public class NetworkTableCommunicator{
      */
     public static void updateReverseBoolean (boolean reverse){
         visionDashboard.getEntry("Reverse").setBoolean(reverse);
+    }
+
+    public static void toggleRunVision (){
+        Logger.log("Toggle Vision");
+        visionDashboard.getEntry("Run Vision").setBoolean(!visionDashboard.getEntry("Run Vision").getBoolean(true));
     }
 
 
