@@ -334,6 +334,10 @@ public class Robot extends TimedRobot {
       else if (Drive.getInstance().isHighGear()){
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.75, -OI.getPilot().getX(Hand.kRight)*0.75);
       }
+      // If grind mode
+      else if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.5){
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.6);
+      }
       else{
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
       }
