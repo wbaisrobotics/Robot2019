@@ -61,7 +61,7 @@ public class Robot extends TimedRobot {
     /**
      *  Begin capturing and sending images for the driver camera
      */
-    CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
+    // CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
     
     /**
      * Initializes the drive instance

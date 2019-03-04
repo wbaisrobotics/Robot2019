@@ -167,10 +167,10 @@ public class BackClimbers extends Subsystem{
     }
 
     public void stopLeft (){
-        this.leftMotor.stopMotor();
+        this.leftMotor.set(0.0);
     }
     public void stopRight (){
-        this.rightMotor.stopMotor();
+        this.rightMotor.set(0.0);
     }
 
     /**
