@@ -174,35 +174,37 @@ public class Robot extends TimedRobot {
      */
     Drive.getInstance().reset();
 
-    // If auto command is not null
-    if (autoCommand != null){
-      // Start the auto command
-      autoCommand.start();
-    }
+    // // If auto command is not null
+    // if (autoCommand != null){
+    //   // Start the auto command
+    //   autoCommand.start();
+    // }
 
   }
 
   @Override
   public void autonomousPeriodic() {
 
-    /**
-     * If the pilot desires to, cancel the auto command
-     */
-    if (OI.getPilot().getBackButton()){
-      autoCommand.cancel();
-    }
+    teleopPeriodic();
 
-    /**
-     * Run the scheduler
-     */
-    Scheduler.getInstance().run();
+    // /**
+    //  * If the pilot desires to, cancel the auto command
+    //  */
+    // if (OI.getPilot().getBackButton()){
+    //   autoCommand.cancel();
+    // }
 
-    /**
-     * Once the auto command is completed, run teleop
-     */
-    if (autoCommand.isCompleted()){
-      teleopPeriodic();
-    }
+    // /**
+    //  * Run the scheduler
+    //  */
+    // Scheduler.getInstance().run();
+
+    // /**
+    //  * Once the auto command is completed, run teleop
+    //  */
+    // if (autoCommand.isCompleted()){
+    //   teleopPeriodic();
+    // }
   }
 
   @Override
@@ -217,7 +219,7 @@ public class Robot extends TimedRobot {
       autoCommand.cancel();
     }
 
-    Drive.getInstance().setReverse(false);
+    // Drive.getInstance().setReverse(false);
 
     climbingMode = false;
 
@@ -230,9 +232,9 @@ public class Robot extends TimedRobot {
 
     // System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
 
-    if (OI.getCoPilot().getBackButton() && OI.getCoPilot().getStartButton()){
-      climbingMode = true;
-      System.out.println("Entered Climb Mode");
+    if (OI.getCoPilot().getBackButtonPressed()){
+      climbingMode = !climbingMode;
+      System.out.println("Toggled Climb Mode");
     }
 
     
@@ -308,7 +310,7 @@ public class Robot extends TimedRobot {
   
       }
 
-      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+      DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getPilot().getTriggerAxis(Hand.kRight)*1.0:0);
 
       DeathCrawler.getInstance().setWormSpeed(Math.abs(OI.getPilot().getY(Hand.kRight)) > 0.1? OI.getPilot().getY(Hand.kRight):0);
 
@@ -339,7 +341,7 @@ public class Robot extends TimedRobot {
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.6);
       }
       else{
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.85);
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
       }
 
       if (OI.getCoPilot().getPOV() == POVDirection.NORTH.getAngle()){
