@@ -51,18 +51,26 @@ public class DriveMotionProfile extends Command {
   private Notifier m_follower_notifier;
 
   /**
+   * Whether or not driving in reverse
+   */
+  private boolean isReverse;
+
+  /**
    * Initialize the follower with a pathName
    * @param pathName
    */
-  public DriveMotionProfile(String pathName) {
+  public DriveMotionProfile(String pathName, boolean isReverse) {
     
     // Requires the drive system
     requires (Drive.getInstance());
 
+    // Remember if the path is in reverse
+    this.isReverse = isReverse;
+
     // Read the trajectories
     try{
-      leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
-      rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
+      leftTrajectory = PathfinderFRC.getTrajectory(pathName + (isReverse?".left":".right"));
+      rightTrajectory = PathfinderFRC.getTrajectory(pathName + (isReverse?".right":".left"));
     }
     catch (IOException exception){
       Logger.log("IO Exception at loading motion profile: " + pathName);
@@ -82,10 +90,13 @@ public class DriveMotionProfile extends Command {
 
     reset();
 
+    // Update the drive to the reverse boolean
+    Drive.getInstance().setReverse(isReverse);
+
     // Configure the left encoder's starting position
-    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
+    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), isReverse?-MotionProfilingConstants.kTicksPerMeterLeft:MotionProfilingConstants.kTicksPerMeterLeft);
     // // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), MotionProfilingConstants.kTicksPerMeterRight);
+    m_right_follower.configureEncoder((int)Drive.getInstance().getRight().getEncoder().getPosition(), isReverse?-MotionProfilingConstants.kTicksPerMeterRight:MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
