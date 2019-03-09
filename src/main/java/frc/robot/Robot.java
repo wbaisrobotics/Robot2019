@@ -9,8 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
+import frc.robot.commands.HatchFromRightToC4;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.oi.OI;
@@ -37,7 +40,7 @@ public class Robot extends TimedRobot {
   /**
    * The command to be run during auto
    */
-  private DriveMotionProfile autoCommand;
+  private Command autoCommand;
 
   /**
    * Initializes the robot and its systems
@@ -46,7 +49,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
 
     SmartDashboard.putNumber("Vision Forward Const", -0.6);
-    SmartDashboard.putNumber("Vision P Const", -3);
+    SmartDashboard.putNumber("Vision P Const", -3.5);
 
     /**
      * Initialize the network table communicator
@@ -56,7 +59,7 @@ public class Robot extends TimedRobot {
     /**
      *  Begin capturing and sending images for the driver camera
      */
-    CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
+    // CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
     
     /**
      * Initializes the drive instance
@@ -99,8 +102,8 @@ public class Robot extends TimedRobot {
 
   }
 
-  public DriveMotionProfile getAutoCommand (){
-    return new DriveMotionProfile("FromSide5ToCollectRight");
+  public Command getAutoCommand (){
+    return new HatchFromRightToC4();
   }
 
   @Override
@@ -137,10 +140,10 @@ public class Robot extends TimedRobot {
     /**
      * Run the scheduler
      */
-    // Scheduler.getInstance().run();
-    // if (autoCommand.isCompleted()){
+    Scheduler.getInstance().run();
+    if (autoCommand.isCompleted()){
       teleopPeriodic();
-    // }
+    }
   }
 
   @Override
@@ -149,11 +152,11 @@ public class Robot extends TimedRobot {
     // Log the init
     Logger.log("Teleoperation Begins");
 
-        // If auto command is not null
-        if (autoCommand != null){
-          // Start the auto command
-          autoCommand.cancel();
-        }
+    // If auto command is not null
+    if (autoCommand != null){
+      // Start the auto command
+      autoCommand.cancel();
+    }
 
     Drive.getInstance().setReverse(false);
 
@@ -348,9 +351,6 @@ public class Robot extends TimedRobot {
      * Initialize the auto command
      */
     // autoCommand = getAutoCommand();
-    if (autoCommand != null){
-      autoCommand.reset();
-    }
 
     Drive.getInstance().stop();
     FrontClimbers.getInstance().stop();

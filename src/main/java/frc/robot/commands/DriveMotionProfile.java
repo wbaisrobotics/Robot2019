@@ -50,21 +50,27 @@ public class DriveMotionProfile extends Command {
    */
   private Notifier m_follower_notifier;
 
+  private boolean reverse;
+
   /**
    * Initialize the follower with a pathName
    * @param pathName
    */
-  public DriveMotionProfile(String pathName) {
+  public DriveMotionProfile(String pathName, boolean reverse) {
     
     // Requires the drive system
     requires (Drive.getInstance());
 
+    this.reverse = reverse;
+
     // Read the trajectories
     try{
+      System.out.println("HERE");
       leftTrajectory = PathfinderFRC.getTrajectory(pathName + ".right");
       rightTrajectory = PathfinderFRC.getTrajectory(pathName + ".left");
     }
     catch (IOException exception){
+      System.out.println("HERE2");
       Logger.log("IO Exception at loading motion profile: " + pathName);
       Logger.log(exception.getMessage());
     }
@@ -78,15 +84,21 @@ public class DriveMotionProfile extends Command {
   /**
    * Initializes the trajectory followers
    */
-  protected void initialize() {
+  public void initialize() {
+
+    reset();
+
+    Drive.getInstance().setReverse(reverse);
 
     // Configure the left encoder's starting position
-    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
+    m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), reverse?-MotionProfilingConstants.kTicksPerMeterLeft:MotionProfilingConstants.kTicksPerMeterLeft);
     // // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), MotionProfilingConstants.kTicksPerMeterRight);
+    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), reverse?-MotionProfilingConstants.kTicksPerMeterRight:MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
+
+    System.out.println(leftTrajectory);
 
     // Initialize the follower
     m_follower_notifier = new Notifier(this::followPath);
