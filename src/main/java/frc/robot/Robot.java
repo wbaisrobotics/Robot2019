@@ -197,7 +197,7 @@ public class Robot extends TimedRobot {
       /**
        * If the pilot desires to, cancel the auto command
        */
-      if (OI.getPilot().getBackButton()){
+      if (OI.getPilot().getXButton()){
         autoCommand.cancel();
       }
 
