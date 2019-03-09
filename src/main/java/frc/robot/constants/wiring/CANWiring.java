@@ -16,7 +16,7 @@ public enum CANWiring {
     DRIVE_RIGHT_3 (22),
 
     // Death Crawler controller (SPARK MAX - 40A)
-    DEATH_CRAWLER (26),
+    DEATH_CRAWLER (27),
     // Death Crawler Arm (TALON SRX - 40A)
     DEATH_CRAWLER_ARM (1),
 
