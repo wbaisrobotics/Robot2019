@@ -9,12 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
-import frc.robot.constants.motionprofiling.ProfilingGroups;
 import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.oi.OI;
 import frc.robot.oi.POVDirection;
@@ -25,8 +25,6 @@ import frc.robot.systems.Drive;
 import frc.robot.systems.FrontClimbers;
 import frc.robot.systems.HatchManipulator;
 import frc.robot.util.Logger;
-
-import edu.wpi.first.cameraserver.CameraServer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,7 +38,7 @@ public class Robot extends TimedRobot {
   /**
    * The command to be run during auto
    */
-  private DriveMotionProfile autoCommand;
+  private Command autoCommand;
 
   /**
    * Initializes the robot and its systems
@@ -48,20 +46,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    // Initialize the vision driving constants
     SmartDashboard.putNumber("Vision Forward Const", -0.6);
     SmartDashboard.putNumber("Vision P Const", -3);
 
+    /**
+     * Setup the chooser for autonomous
+     */
     setupAutoChooser();
 
     /**
      * Initialize the network table communicator
      */
-    NetworkTableCommunicator.init();
-
-    /**
-     *  Begin capturing and sending images for the driver camera
-     */
-    // CameraServer.getInstance().startAutomaticCapture().setBrightness(40);
+    NetworkTableCommunicator.init(this);
     
     /**
      * Initializes the drive instance
@@ -93,18 +90,19 @@ public class Robot extends TimedRobot {
      */
     HatchManipulator.getInstance();
 
-    /**
-     * Initialize the auto command
-     */
-    autoCommand = getAutoCommand();
-    /**
-     * Initializes the OI
-     */
-    //OI.initButtons();
-
   }
 
-  private SendableChooser<ProfilingGroups> autoChooser;
+  /**
+   * Called the load the auto command from the dashboard & initialize the object
+   */
+  public void loadAutoCommand (){
+    this.autoCommand = getAutoCommand();
+  }
+
+  /**
+   * The chooser for the auto command
+   */
+  private SendableChooser<Command> autoChooser;
 
   /**
    * Sets up the smart dashbaord senable choosers
@@ -114,19 +112,13 @@ public class Robot extends TimedRobot {
     /**
      * Initiate the sendable chooser
      */
-    autoChooser = new SendableChooser<ProfilingGroups>();
+    autoChooser = new SendableChooser<Command>();
 
     /**
      * Add a no-auto option and have the object be null
      */
     autoChooser.addOption("None", null);
 
-    /**
-     * For each path group in ProfilingGroups, add a object to the chooser
-     */
-    for (ProfilingGroups group : ProfilingGroups.values()){
-      autoChooser.addOption(group.toString(), group);
-    }
 
     /**
      * Send the chooser to the smart dashboard
@@ -135,33 +127,39 @@ public class Robot extends TimedRobot {
 
   }
 
-  public DriveMotionProfile getAutoCommand (){
+  public Command getAutoCommand (){
 
     /**
-     * Retrieve the selected path group
+     * Retrieve the selected auto command
      */
-    ProfilingGroups selectedPathGroup = autoChooser.getSelected();
+    Command selectedAutoCommand = autoChooser.getSelected();
 
-    /**
-     * If none was chosen, return null
-     */
-    if (selectedPathGroup == null){
-      return null;
-    }
+    // Return the selected auto command
+    return selectedAutoCommand;
 
-    // TO DO: Create the command using the profiling group
-
-    return new DriveMotionProfile("FromSide5ToCollectRight");
   }
 
   @Override
   public void autonomousInit() {
 
+    /**
+     * Reset the drive system
+     */
+    Drive.getInstance().reset();
 
+    /**
+     * Update the face of the robot
+     */
     Drive.getInstance().setReverse(false);
 
+    /**
+     * Disable climbing mode
+     */
     climbingMode = false;
 
+    /**
+     * Update to low gear
+     */
     if (Drive.getInstance().isHighGear()){
       Drive.getInstance().toggleGearSpeed();
     }
@@ -174,37 +172,49 @@ public class Robot extends TimedRobot {
      */
     Drive.getInstance().reset();
 
-    // // If auto command is not null
-    // if (autoCommand != null){
-    //   // Start the auto command
-    //   autoCommand.start();
-    // }
+    // If auto command is not null
+    if (autoCommand != null){
+      // Start the auto command
+      autoCommand.start();
+    }
 
   }
 
   @Override
   public void autonomousPeriodic() {
 
-    teleopPeriodic();
+    /**
+     * If there is no auto command, just run teleop
+     */
+    if (autoCommand == null){
+      teleopPeriodic();
+    }
+    /**
+     * If there is an auto command
+     */
+    else{
 
-    // /**
-    //  * If the pilot desires to, cancel the auto command
-    //  */
-    // if (OI.getPilot().getBackButton()){
-    //   autoCommand.cancel();
-    // }
+      /**
+       * If the pilot desires to, cancel the auto command
+       */
+      if (OI.getPilot().getBackButton()){
+        autoCommand.cancel();
+      }
 
-    // /**
-    //  * Run the scheduler
-    //  */
-    // Scheduler.getInstance().run();
+      /**
+       * Run the scheduler
+       */
+      Scheduler.getInstance().run();
 
-    // /**
-    //  * Once the auto command is completed, run teleop
-    //  */
-    // if (autoCommand.isCompleted()){
-    //   teleopPeriodic();
-    // }
+      /**
+       * Once the auto command is completed, run teleop
+       */
+      if (autoCommand.isCompleted()){
+        teleopPeriodic();
+      }
+
+    }
+
   }
 
   @Override
@@ -215,29 +225,29 @@ public class Robot extends TimedRobot {
 
     // If auto command is not null
     if (autoCommand != null){
-      // Start the auto command
+      // Cancel the auto command
       autoCommand.cancel();
     }
 
-    // Drive.getInstance().setReverse(false);
-
+    /**
+     * Disable climbing mode
+     **/
     climbingMode = false;
 
   }
 
+  /**
+   * Whetehr or not the robot is in climbing mode
+   */
   private boolean climbingMode = false;
 
   @Override
   public void teleopPeriodic() {
 
-    // System.out.println(Drive.getInstance().getLeft().getEncoder().getPosition() + "," + Drive.getInstance().getRight().getEncoder().getPosition());
-
     if (OI.getCoPilot().getBackButtonPressed()){
       climbingMode = !climbingMode;
       System.out.println("Toggled Climb Mode");
     }
-
-    
 
     SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
     SmartDashboard.putNumber("Right Encoder", Drive.getInstance().getRight().getEncoder().getPosition());
@@ -400,15 +410,6 @@ public class Robot extends TimedRobot {
   public void disabledInit (){
 
     Drive.getInstance().reset();
-      /**
-     * Initialize the auto command
-     */
-    // autoCommand = getAutoCommand();
-
-    // Reset the auto command, if it exists
-    if (autoCommand != null){
-      autoCommand.reset();
-    }
 
     // Stop all the systems
     Drive.getInstance().stop();

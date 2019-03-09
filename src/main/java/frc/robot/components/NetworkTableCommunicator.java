@@ -1,9 +1,13 @@
 
 package frc.robot.components;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableValue;
+import edu.wpi.first.networktables.TableEntryListener;
+import frc.robot.Robot;
 import frc.robot.constants.network.SmartDashboardConstants;
 import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.util.Logger;
@@ -13,6 +17,8 @@ import frc.robot.util.Logger;
  */
 public class NetworkTableCommunicator{
 
+    private static Robot robot;
+
     /**
      * The global network table instance
      */
@@ -21,7 +27,9 @@ public class NetworkTableCommunicator{
     /**
      * Initializes all the network tables
      */
-    public static void init (){
+    public static void init (Robot r){
+        // Save the robot instance
+        robot = r;
         // Retrieve a network table instance
         tableInstance = NetworkTableInstance.getDefault();
         // Init the smart dashboard
@@ -59,6 +67,24 @@ public class NetworkTableCommunicator{
             // Get the entry from the table for the constant and set to the default value
             smartDashboard.getEntry(constant.getKey()).setValue(constant.getDefaultValue());
         }
+
+        // Add a listener for the autonomous chooser (so that the command can be created before match start)
+        smartDashboard.addEntryListener("Autonomous Chooser", new TableEntryListener(){
+        
+            @Override
+            public void valueChanged(NetworkTable table, String key, NetworkTableEntry entry, NetworkTableValue value,
+                    int flags) {
+
+                Logger.log("Updated autonomous chooser variable");
+
+                /**
+                 * Load the autonomous command
+                 */
+                robot.loadAutoCommand();
+                
+            }
+        }, EntryListenerFlags.kUpdate);
+
     }
 
     /**

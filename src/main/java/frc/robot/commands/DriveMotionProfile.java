@@ -80,6 +80,8 @@ public class DriveMotionProfile extends Command {
    */
   protected void initialize() {
 
+    reset();
+
     // Configure the left encoder's starting position
     m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getEncoder().getPosition(), MotionProfilingConstants.kTicksPerMeterLeft);
     // // Configure the right encoder's starting position
@@ -122,8 +124,6 @@ public class DriveMotionProfile extends Command {
       // End the notifier
       m_follower_notifier.stop();
     }
-    // Log the end
-    Logger.log("Finished driving the motion profiling");
   }
 
   /**
