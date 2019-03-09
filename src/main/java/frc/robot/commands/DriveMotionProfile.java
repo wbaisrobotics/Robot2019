@@ -93,7 +93,7 @@ public class DriveMotionProfile extends Command {
     // Configure the left encoder's starting position
     m_left_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), reverse?-MotionProfilingConstants.kTicksPerMeterLeft:MotionProfilingConstants.kTicksPerMeterLeft);
     // // Configure the right encoder's starting position
-    m_right_follower.configureEncoder((int)Drive.getInstance().getLeft().getSelectedSensorPosition(), reverse?-MotionProfilingConstants.kTicksPerMeterRight:MotionProfilingConstants.kTicksPerMeterRight);
+    m_right_follower.configureEncoder((int)Drive.getInstance().getRight().getSelectedSensorPosition(), reverse?-MotionProfilingConstants.kTicksPerMeterRight:MotionProfilingConstants.kTicksPerMeterRight);
 
     // Update the PID values
     updatePID();
@@ -162,7 +162,7 @@ public class DriveMotionProfile extends Command {
 
       // Calculate the speeds of each side based on the encoder locations
       double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
-      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getSelectedSensorPosition());
+      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getRight().getSelectedSensorPosition());
       // // Calculate the gyro angle's effect
       double heading = Drive.getInstance().getGyro().getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
