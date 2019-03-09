@@ -161,7 +161,7 @@ public class DriveMotionProfile extends Command {
 
       // Calculate the speeds of each side based on the encoder locations
       double left_speed = m_left_follower.calculate((int)Drive.getInstance().getLeft().getEncoder().getPosition());
-      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getLeft().getEncoder().getPosition());
+      double right_speed = m_right_follower.calculate((int)Drive.getInstance().getRight().getEncoder().getPosition());
       // // Calculate the gyro angle's effect
       double heading = Drive.getInstance().getGyro().getAngle();
       double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
