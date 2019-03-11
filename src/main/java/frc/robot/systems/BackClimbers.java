@@ -119,7 +119,7 @@ public class BackClimbers extends Subsystem{
     }
 
     public boolean extendLeft (){
-        this.leftMotor.set(EXTEND_POWER);
+        this.leftMotor.set(EXTEND_POWER*1.05);
         return false;
     }
 
@@ -140,7 +140,7 @@ public class BackClimbers extends Subsystem{
 
     public boolean retractLeft (){
         // TO CHANGE BACK
-        this.leftMotor.set(RETRACT_POWER );
+        this.leftMotor.set(RETRACT_POWER);
         return false;
     }
 

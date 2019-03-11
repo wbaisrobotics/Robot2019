@@ -124,7 +124,7 @@ public class FrontClimbers extends Subsystem{
     }
 
     public boolean extendLeft (){
-        this.leftMotor.set(EXTEND_POWER * 0.95);
+        this.leftMotor.set(EXTEND_POWER);
         return false;
     }
 

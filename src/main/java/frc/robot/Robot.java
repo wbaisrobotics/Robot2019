@@ -183,37 +183,37 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
 
-    /**
-     * If there is no auto command, just run teleop
-     */
-    if (autoCommand == null){
-      teleopPeriodic();
-    }
-    /**
-     * If there is an auto command
-     */
-    else{
+    // /**
+    //  * If there is no auto command, just run teleop
+    //  */
+    // if (autoCommand == null){
+    //   teleopPeriodic();
+    // }
+    // /**
+    //  * If there is an auto command
+    //  */
+    // else{
 
-      /**
-       * If the pilot desires to, cancel the auto command
-       */
-      if (OI.getPilot().getXButton()){
-        autoCommand.cancel();
-      }
+    //   /**
+    //    * If the pilot desires to, cancel the auto command
+    //    */
+    //   if (OI.getPilot().getXButton()){
+    //     autoCommand.cancel();
+    //   }
 
-      /**
-       * Run the scheduler
-       */
-      Scheduler.getInstance().run();
+    //   /**
+    //    * Run the scheduler
+    //    */
+    //   Scheduler.getInstance().run();
 
-      /**
-       * Once the auto command is completed, run teleop
-       */
-      if (autoCommand.isCompleted()){
+    //   /**
+    //    * Once the auto command is completed, run teleop
+    //    */
+    //   if (autoCommand.isCompleted()){
         teleopPeriodic();
-      }
+    //   }
 
-    }
+    // }
 
   }
 
@@ -335,6 +335,8 @@ public class Robot extends TimedRobot {
         NetworkTableCommunicator.toggleRunVision();
       }
 
+      SmartDashboard.putBoolean("Is High Gear", Drive.getInstance().isHighGear());
+
       VisionTargetInfo targetInfo = NetworkTableCommunicator.getTargetInfo();
 
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
@@ -358,10 +360,10 @@ public class Robot extends TimedRobot {
         BallManipulator.getInstance().lowerBall();
       }
       if (OI.getCoPilot().getPOV() == POVDirection.SOUTH.getAngle()){
-        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? OI.getCoPilot().getTriggerAxis(Hand.kRight)*1.0:0);
       }
       else{
-        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*0.4:0);
+        DeathCrawler.getInstance().setCrawlSpeed(Math.abs(OI.getCoPilot().getTriggerAxis(Hand.kRight)) > 0.1? -OI.getCoPilot().getTriggerAxis(Hand.kRight)*1.0:0);
       }
       
       if (OI.getPilot().getBumperPressed(Hand.kLeft)){
