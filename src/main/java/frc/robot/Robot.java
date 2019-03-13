@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
@@ -35,6 +36,8 @@ import frc.robot.util.Logger;
  */
 public class Robot extends TimedRobot {
 
+  private Compressor comp;
+
   /**
    * The command to be run during auto
    */
@@ -45,6 +48,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+
+    comp = new Compressor();
 
     // Initialize the vision driving constants
     SmartDashboard.putNumber("Vision Forward Const", -0.6);
@@ -343,17 +348,31 @@ public class Robot extends TimedRobot {
 
       // If following vision
       if (!targetInfo.isError() && OI.getPilot().getBumper(Hand.kRight)){
+        if (Drive.getInstance().isHighGear()){
+          Drive.getInstance().toggleGearSpeed();
+        }
         driveVision(targetInfo);
       }
       else if (Drive.getInstance().isHighGear()){
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.75, -OI.getPilot().getX(Hand.kRight)*0.75);
+        double y = OI.getPilot().getY(Hand.kLeft);
+        y *= 0.75;
+        double x = -OI.getPilot().getX(Hand.kRight);
+        x *= 0.75;
+        Drive.getInstance().arcadeDrive(y, x);
       }
       // If grind mode
       else if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.5){
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.6);
       }
       else{
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*0.85, -OI.getPilot().getX(Hand.kRight)*0.75);
+        double y = OI.getPilot().getY(Hand.kLeft);
+        y *= 0.9;
+        y *= (y * Math.signum(y));
+        double x = -OI.getPilot().getX(Hand.kRight);
+        x *= 0.9;
+        // x *= (x * Math.signum(x));
+        x *= (x * x);
+        Drive.getInstance().arcadeDrive(y, x);
       }
 
       if (OI.getCoPilot().getPOV() == POVDirection.NORTH.getAngle()){
@@ -442,6 +461,25 @@ public class Robot extends TimedRobot {
     double forward = SmartDashboard.getNumber("Vision Forward Const", 0);
 
     Drive.getInstance().arcadeDrive(forward, turn);
+
+  }
+
+  /**
+   * Periodically, log the state of the robot
+   */
+  public void robotPeriodic(){
+
+    String driveStatus = Drive.getInstance().toString();
+    String hatchStatus = HatchManipulator.getInstance().toString();
+    String ballManipulatorStatus = BallManipulator.getInstance().toString();
+    String deathCrawlerStatus = DeathCrawler.getInstance().toString();
+    String frontClimbersStatus = FrontClimbers.getInstance().toString();
+    String backClimbersStatus = BackClimbers.getInstance().toString();
+    String compressorStatus = "Compressor: Switch - " + comp.getPressureSwitchValue() + ", Current - " + comp.getCompressorCurrent();
+
+    String completeLog = driveStatus + ";\t" + hatchStatus + ";\t" + ballManipulatorStatus + ";\t" + deathCrawlerStatus + ";\t" + frontClimbersStatus + ";\t" + backClimbersStatus + ";\t" + compressorStatus;
+
+    Logger.logEvery(completeLog, 25, this);
 
   }
 

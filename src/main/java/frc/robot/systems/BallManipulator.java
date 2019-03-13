@@ -134,5 +134,9 @@ public class BallManipulator{
         this.ballShooter.set(SHOOTER_IN_SPEED);
     }
 
+    public String toString(){
+        return "Ball Manipulator: Elevator - " + ballElevator.get() + ", Shooter - " + ballShooter.get();
+    }
+
 
 }

@@ -220,6 +220,9 @@ public class Drive extends Subsystem{
           return this.reverse;
       }
 
+      private double lastXSpeed;
+      private double lastZRotation;
+
       /**
        * Arcade drive (accounting for reverse)
        */
@@ -227,6 +230,8 @@ public class Drive extends Subsystem{
         //   xSpeed = xSpeed>0?xSpeed*xSpeed:-xSpeed*xSpeed;
         //   zRotation = zRotation>0?zRotation*zRotation:-zRotation*zRotation;
           drive.arcadeDrive(getReverse()?-xSpeed:xSpeed, zRotation);
+          lastXSpeed = getReverse()?-xSpeed:xSpeed;
+          lastZRotation = zRotation;
       }
 
       /**
@@ -261,6 +266,13 @@ public class Drive extends Subsystem{
       public void initDefaultCommand (){
         // Set the default command to JoystickDrive
         super.setDefaultCommand(new JoystickDrive());
+      }
+
+      /**
+       * Return a log of the current status
+       */
+      public String toString(){
+        return "Drive: XSpeed - " + lastXSpeed + ", ZSpeed - " + lastZRotation + ", Reverse - " + getReverse() + ", Is High Gear - " + isHighGear();
       }
 
 }

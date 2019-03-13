@@ -123,4 +123,8 @@ public class HatchManipulator extends Subsystem {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
   }
+
+  public String toString(){
+    return "HatchManipulator: Shooter In? - " + (shooter.get() == SHOOTER_IN_VALUE) + ", Thunker Up? - " + (thunker.get() == THUNKER_UP_VALUE);
+  }
 }

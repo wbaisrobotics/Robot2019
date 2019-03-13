@@ -73,4 +73,9 @@ public class DeathCrawler{
         
     }
 
+    public String toString(){
+        return "DeathCrawler: Crawl - " + deathCrawlMotor.get() + ", Worm - " + wormArmMotor.get();
+    }
+
+
 }

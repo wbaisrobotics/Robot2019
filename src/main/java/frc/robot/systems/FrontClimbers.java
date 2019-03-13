@@ -195,4 +195,8 @@ public class FrontClimbers extends Subsystem{
     }
 
 
+    public String toString(){
+        return "FrontClimbers: Left - " + leftMotor.get() + ", Right - " + rightMotor.get();
+    }
+
 }
