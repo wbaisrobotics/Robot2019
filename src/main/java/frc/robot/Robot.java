@@ -365,7 +365,7 @@ public class Robot extends TimedRobot {
   private void driveVision(VisionTargetInfo targetInfo){
 
     // Unwrap the target info
-    double xDiff = targetInfo.getXDiff();
+    double xDiff = targetInfo.getXDiff() - 0.1;
     // double yDiff = targetInfo.getYDiff();
     // double heightRatio = targetInfo.getHeightRatio();
     // double ttsr = targetInfo.getTTSR();
