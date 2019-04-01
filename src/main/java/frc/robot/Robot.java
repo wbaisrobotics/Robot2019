@@ -361,7 +361,7 @@ public class Robot extends TimedRobot {
         Drive.getInstance().arcadeDrive(y, x);
       }
       // If grind mode
-      else if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.5){
+      else if (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.5){
         Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.6);
       }
       else{
