@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
@@ -346,12 +347,16 @@ public class Robot extends TimedRobot {
 
       SmartDashboard.putBoolean("Target in Sight", !targetInfo.isError());
 
+      // Reset the variable
+      Drive.getInstance().drivingVision = false;
+
       // If following vision
       if (!targetInfo.isError() && OI.getPilot().getBumper(Hand.kRight)){
         if (Drive.getInstance().isHighGear()){
           Drive.getInstance().toggleGearSpeed();
         }
         driveVision(targetInfo);
+        Drive.getInstance().drivingVision = true;
       }
       else if (Drive.getInstance().isHighGear()){
         double y = OI.getPilot().getY(Hand.kLeft);
@@ -432,6 +437,7 @@ public class Robot extends TimedRobot {
 
   public void disabledInit (){
 
+    // Reset the drive
     Drive.getInstance().reset();
 
     // Stop all the systems
@@ -440,6 +446,9 @@ public class Robot extends TimedRobot {
     BackClimbers.getInstance().stop();
     BallManipulator.getInstance().stop();
     DeathCrawler.getInstance().stop();
+
+    // Flush to log file
+    Logger.flushToFile();
 
   }
 
@@ -471,17 +480,52 @@ public class Robot extends TimedRobot {
    */
   public void robotPeriodic(){
 
-    String driveStatus = Drive.getInstance().toString();
-    String hatchStatus = HatchManipulator.getInstance().toString();
-    String ballManipulatorStatus = BallManipulator.getInstance().toString();
-    String deathCrawlerStatus = DeathCrawler.getInstance().toString();
-    String frontClimbersStatus = FrontClimbers.getInstance().toString();
-    String backClimbersStatus = BackClimbers.getInstance().toString();
-    String compressorStatus = "Compressor: Switch - " + comp.getPressureSwitchValue() + ", Current - " + comp.getCompressorCurrent();
+    if (!DriverStation.getInstance().isDisabled()){
 
-    String completeLog = driveStatus + ";\t" + hatchStatus + ";\t" + ballManipulatorStatus + ";\t" + deathCrawlerStatus + ";\t" + frontClimbersStatus + ";\t" + backClimbersStatus + ";\t" + compressorStatus;
+      // String driveStatus = Drive.getInstance().toString();
+      // String hatchStatus = HatchManipulator.getInstance().toString();
+      // String ballManipulatorStatus = BallManipulator.getInstance().toString();
+      // String deathCrawlerStatus = DeathCrawler.getInstance().toString();
+      // String frontClimbersStatus = FrontClimbers.getInstance().toString();
+      // String backClimbersStatus = BackClimbers.getInstance().toString();
+      // String compressorStatus = "Compressor: Switch - " + comp.getPressureSwitchValue() + ", Current - " + comp.getCompressorCurrent();
 
-    Logger.logEvery(completeLog, 25, this);
+      // String completeLog = driveStatus + ";\t" + hatchStatus + ";\t" + ballManipulatorStatus + ";\t" + deathCrawlerStatus + ";\t" + frontClimbersStatus + ";\t" + backClimbersStatus + ";\t" + compressorStatus;
+
+      // Logger.logEvery(completeLog, 25, this);
+      
+      Logger.logToFile(new Double[]{
+
+        DriverStation.getInstance().getMatchTime(),
+
+        Drive.getInstance().lastXSpeed,
+        Drive.getInstance().lastZRotation,
+        Drive.getInstance().isHighGear()?1.0:0.0,
+        Drive.getInstance().getReverse()?1.0:0.0,
+        Drive.getInstance().drivingVision?1.0:0.0,
+
+        HatchManipulator.getInstance().isShooterIn()?1.0:0.0,
+        HatchManipulator.getInstance().isThunkerUp()?1.0:0.0,
+
+        BallManipulator.getInstance().getShooterSpeed(),
+        BallManipulator.getInstance().getElevatorSpeed(),
+
+        DeathCrawler.getInstance().getDeathCrawlerSpeed(),
+        DeathCrawler.getInstance().getWormSpeed(),
+
+        FrontClimbers.getInstance().getLeftSpeed(),
+        FrontClimbers.getInstance().getRightSpeed(),
+
+        BackClimbers.getInstance().getLeftSpeed(),
+        BackClimbers.getInstance().getRightSpeed(),
+
+        comp.getPressureSwitchValue()?1.0:0.0,
+        comp.getCompressorCurrent()
+
+
+      });
+
+    }
 
   }
 

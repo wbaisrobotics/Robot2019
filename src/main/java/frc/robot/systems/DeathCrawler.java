@@ -73,8 +73,16 @@ public class DeathCrawler{
         
     }
 
+    public double getDeathCrawlerSpeed(){
+        return deathCrawlMotor.get();
+    }
+
+    public double getWormSpeed(){
+        return wormArmMotor.get();
+    }
+
     public String toString(){
-        return "DeathCrawler: Crawl - " + deathCrawlMotor.get() + ", Worm - " + wormArmMotor.get();
+        return "DeathCrawler: Crawl - " + getDeathCrawlerSpeed() + ", Worm - " + getWormSpeed();
     }
 
 

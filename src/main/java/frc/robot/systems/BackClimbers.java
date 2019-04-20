@@ -189,8 +189,16 @@ public class BackClimbers extends Subsystem{
     public void initDefaultCommand(){
     }
 
+    public double getLeftSpeed (){
+        return leftMotor.get();
+    }
+
+    public double getRightSpeed (){
+        return rightMotor.get();
+    }
+
     public String toString(){
-        return "BackClimbers: Left - " + leftMotor.get() + ", Right - " + rightMotor.get();
+        return "BackClimbers: Left - " + getLeftSpeed() + ", Right - " + getRightSpeed();
     }
 
 

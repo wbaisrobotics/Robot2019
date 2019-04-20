@@ -118,6 +118,14 @@ public class HatchManipulator extends Subsystem {
     shooter.set(SHOOTER_IN_VALUE);
   }
 
+  public boolean isShooterIn (){
+    return shooter.get() == SHOOTER_IN_VALUE;
+  }
+
+  public boolean isThunkerUp (){
+    return thunker.get() == THUNKER_UP_VALUE;
+  }
+
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
@@ -125,6 +133,6 @@ public class HatchManipulator extends Subsystem {
   }
 
   public String toString(){
-    return "HatchManipulator: Shooter In? - " + (shooter.get() == SHOOTER_IN_VALUE) + ", Thunker Up? - " + (thunker.get() == THUNKER_UP_VALUE);
+    return "HatchManipulator: Shooter In? - " + (isShooterIn()) + ", Thunker Up? - " + (isThunkerUp());
   }
 }

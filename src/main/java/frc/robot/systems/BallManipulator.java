@@ -127,6 +127,16 @@ public class BallManipulator{
         this.ballShooter.set(-speed);
     }
 
+
+    public double getElevatorSpeed (){
+        return ballElevator.get();
+    }
+
+    public double getShooterSpeed (){
+        return ballShooter.get();
+    }
+
+
     /**
      * Reverses the ball shooter
      */
@@ -135,7 +145,7 @@ public class BallManipulator{
     // }
 
     public String toString(){
-        return "Ball Manipulator: Elevator - " + ballElevator.get() + ", Shooter - " + ballShooter.get();
+        return "Ball Manipulator: Elevator - " + getElevatorSpeed() + ", Shooter - " + getShooterSpeed();
     }
 
 

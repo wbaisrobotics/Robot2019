@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.util.Logger;
+import java.lang.instrument.Instrumentation;
 
 /**
  * Do NOT add any static variables to this class, or any initialization at all.
@@ -24,6 +26,24 @@ public final class Main {
    * <p>If you change your main robot class, change the parameter type.
    */
   public static void main(String... args) {
-    RobotBase.startRobot(Robot::new);
+    // RobotBase.startRobot(Robot::new);
+
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < 7500; i++){
+      Logger.logToFile(new Double[]{Math.random(), Math.random(), Math.random(), Math.random(), Math.random()
+        , Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(),
+        Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()});
+    }
+    try{
+      Thread.sleep(10000);
+    }
+    catch (Exception e){
+      
+    }
+    System.out.println(System.currentTimeMillis() - start);
+    Logger.flushToFile();
+    System.out.println(System.currentTimeMillis() - start);
   }
+
+  
 }

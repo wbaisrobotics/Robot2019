@@ -194,9 +194,16 @@ public class FrontClimbers extends Subsystem{
     public void initDefaultCommand(){
     }
 
+    public double getLeftSpeed (){
+        return leftMotor.get();
+    }
+
+    public double getRightSpeed (){
+        return rightMotor.get();
+    }
 
     public String toString(){
-        return "FrontClimbers: Left - " + leftMotor.get() + ", Right - " + rightMotor.get();
+        return "FrontClimbers: Left - " + getLeftSpeed() + ", Right - " + getRightSpeed();
     }
 
 }

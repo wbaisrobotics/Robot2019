@@ -220,8 +220,9 @@ public class Drive extends Subsystem{
           return this.reverse;
       }
 
-      private double lastXSpeed;
-      private double lastZRotation;
+      public double lastXSpeed;
+      public double lastZRotation;
+      public boolean drivingVision;
 
       /**
        * Arcade drive (accounting for reverse)
@@ -285,7 +286,7 @@ public class Drive extends Subsystem{
        * Return a log of the current status
        */
       public String toString(){
-        return "Drive: XSpeed - " + lastXSpeed + ", ZSpeed - " + lastZRotation + ", Reverse - " + getReverse() + ", Is High Gear - " + isHighGear();
+        return "Drive: XSpeed - " + lastXSpeed + ", ZSpeed - " + lastZRotation + ", Reverse - " + getReverse() + ", Is High Gear - " + isHighGear() + ", Is Driving Vision: " + drivingVision;
       }
 
 }
