@@ -11,10 +11,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.DriveMotionProfile;
 import frc.robot.components.NetworkTableCommunicator;
 import frc.robot.constants.network.VisionTargetInfo;
 import frc.robot.oi.OI;
@@ -165,9 +163,7 @@ public class Robot extends TimedRobot {
     /**
      * Update to low gear
      */
-    if (Drive.getInstance().isHighGear()){
-      Drive.getInstance().toggleGearSpeed();
-    }
+    Drive.getInstance().setIsHighGear(false);
 
     // Log the init
     Logger.log("Autonomous Begins");
@@ -252,6 +248,10 @@ public class Robot extends TimedRobot {
     if (OI.getCoPilot().getBackButtonPressed()){
       climbingMode = !climbingMode;
       System.out.println("Toggled Climb Mode");
+      if (climbingMode){
+        Drive.getInstance().setReverse(true);
+        Drive.getInstance().setIsHighGear(false);
+      }
     }
 
     SmartDashboard.putNumber("Left Encoder", Drive.getInstance().getLeft().getEncoder().getPosition());
@@ -362,14 +362,14 @@ public class Robot extends TimedRobot {
       }
       // If grind mode
       else if (OI.getPilot().getTriggerAxis(Hand.kLeft) > 0.5){
-        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.6);
+        Drive.getInstance().arcadeDrive(OI.getPilot().getY(Hand.kLeft)*1.0, -OI.getPilot().getX(Hand.kRight)*0.5);
       }
       else{
         double y = OI.getPilot().getY(Hand.kLeft);
         y *= 0.9;
         y *= (y * Math.signum(y));
         double x = -OI.getPilot().getX(Hand.kRight);
-        x *= 0.9;
+        x *= 0.85;
         // x *= (x * Math.signum(x));
         x *= (x * x);
         Drive.getInstance().arcadeDrive(y, x);
@@ -400,12 +400,14 @@ public class Robot extends TimedRobot {
         BallManipulator.getInstance().stopElevator();
       }
 
-      if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.3){
-        BallManipulator.getInstance().shooterOut();
-      }
-      else{
-        BallManipulator.getInstance().stopShooter();
-      }
+      // if (OI.getCoPilot().getTriggerAxis(Hand.kLeft) > 0.3){
+      //   BallManipulator.getInstance().shooterOut();
+      // }
+      // else{
+      //   BallManipulator.getInstance().stopShooter();
+      // }
+
+      BallManipulator.getInstance().shooterSet(OI.getCoPilot().getTriggerAxis(Hand.kLeft));
 
       if (OI.getCoPilot().getYButton()){
         HatchManipulator.getInstance().thunkerDown();

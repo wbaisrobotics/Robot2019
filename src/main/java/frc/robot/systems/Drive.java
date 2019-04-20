@@ -241,16 +241,29 @@ public class Drive extends Subsystem{
         drive.tankDrive(getReverse()?-left:left, getReverse()?-right:right);
       }
 
+      private boolean isHighGear = false;
+
       /**
        * Toggles the gear speed
        */
       public void toggleGearSpeed (){
-          this.gearShifter.set(this.gearShifter.get() == Value.kForward?Value.kReverse:Value.kForward);
+          this.setIsHighGear(!isHighGear());
       }
 
       public boolean isHighGear(){
-        return this.gearShifter.get() == Value.kForward;
+        return isHighGear;
       }
+
+      public void setIsHighGear(boolean newValue){
+        System.out.println("Set Is High Gear to " + newValue);
+        this.isHighGear = newValue;
+        updateShifter();
+      }
+
+      private void updateShifter(){
+        this.gearShifter.set(isHighGear()?Value.kForward:Value.kReverse);
+      }
+
 
       /**
        * Returns the gyro

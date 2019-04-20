@@ -123,16 +123,16 @@ public class BallManipulator{
     /**
      * Shoots out a ball using the shooter
      */
-    public void shooterOut (){
-        this.ballShooter.set(SHOOTER_OUT_SPEED);
+    public void shooterSet (double speed){
+        this.ballShooter.set(-speed);
     }
 
     /**
      * Reverses the ball shooter
      */
-    public void shooterIn (){
-        this.ballShooter.set(SHOOTER_IN_SPEED);
-    }
+    // public void shooterIn (){
+    //     this.ballShooter.set(SHOOTER_IN_SPEED);
+    // }
 
     public String toString(){
         return "Ball Manipulator: Elevator - " + ballElevator.get() + ", Shooter - " + ballShooter.get();
