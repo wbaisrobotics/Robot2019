@@ -3,9 +3,12 @@ package frc.robot.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -54,8 +57,22 @@ public class Logger {
 		// If anything was logged yet
 		if (logs.size() > 0){
 
+			// Open a directory named Logs (iff doesn't already exist)
+			File file = new File("/home/lvuser/Logs");
+			if (!file.exists()) {
+				if (file.mkdir()) {
+					System.out.println("Log Directory is created!");
+				} else {
+					System.out.println("Failed to create Log directory!");
+				}
+			}
+			// Create name for this log
+			Date date = new Date() ;
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+			// For Detroit time zone
+			dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-4:00"));
 			// Define the file location
-			String fileName = "/Users/orianleitersdorf/Desktop/output.csv";
+			String fileName = "/home/lvuser/Logs/" + dateFormat.format(date) + ";" + DriverStation.getInstance().getMatchType() + DriverStation.getInstance().getMatchNumber() + ".csv";
 
 			// Try to open the file at the location
 			try (PrintWriter writer = new PrintWriter(new File(fileName))) {
